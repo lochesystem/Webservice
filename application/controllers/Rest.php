@@ -10,6 +10,7 @@ class Rest extends CI_Controller{
 		$dados = array("mercados" => $mercados);
 
 		//$this->load->view("rest/index.php", $dados);
+		//$this->load->view("rest/index.php", $dados);
 
 		echo $this->myjson->my_json_encode($dados);
     }
