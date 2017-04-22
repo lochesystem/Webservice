@@ -34,19 +34,22 @@ class Consumidor extends CI_Controller{
 
             $this->load->model("email_model");
             $retorno1 = $this->email_model->adicionar_email($Email);
-            var_dump($retorno1);
+
             if(!empty($retorno1)){
+                $this->load->model("usuario_model");
+
+                $resp = $this->usuario_model->retornar_id_prox_usuario($this->input->post("tipo_usuario_id"));
+                var_dump($resp);
 
                 $usuario = array(
                     "tipo_usuario_id" => $this->input->post("tipo_usuario_id"),
-                    "usuario_id" => 1,
+                    "usuario_id" => $resp,
                     "status_id" => 4,
                     "usuario_login" => $this->input->post("usuario_email"),
                     "usuario_senha" => "teste123",
                     "email_id" => $retorno1       
                 );
 
-                $this->load->model("usuario_model");
                 $retorno2 = $this->usuario_model->adicionar_usuario($usuario);
 
                 if($retorno2 == "SUCESSO"){

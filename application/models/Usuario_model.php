@@ -141,6 +141,16 @@
 				return null;
 		}
 		
+		public function retornar_id_prox_usuario($tipo_usuario_id){
+			$this->load->database();
+			$query = $this->db->query('select fn_proximo_id_usuario('.$tipo_usuario_id.')');
+
+			foreach ($query->result_array() as $row)
+			{
+				return $row['fn_proximo_id_usuario(1)'];
+			}
+		}
+		
 		public function adicionar_usuario($usuario)
 		{
 			$this->db->insert('TB_USUARIOS',$usuario);
@@ -158,7 +168,5 @@
 		public function retornar_senha_provissoria(){
 			return 123456;
 		}
-
-
 	}
 ?>

@@ -32,17 +32,17 @@
 			$this->db->insert("TB_EMAILS",$email);
 
 			if($this->db->error()["code"] == 0){
-				$teste = array(
-					"id" => $this->db->insert_id()
-				);
-				var_dump($teste);
-				return $teste;
+				return $this->db->insert_id();
 			}else{
 				return "ERRO";
 			}
 		}
 
 		public function retornar_todos(){
-			return $this->db->get("TB_EMAILS")->result_array();
+			$this->load->database();
+			$query = $this->db->query('select * from TB_EMAILS');
+			return $query->result_array();
 		}
+
+
 	}
