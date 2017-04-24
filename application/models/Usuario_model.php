@@ -121,24 +121,29 @@
 
 		public function retornar_por_login($login)
 		{
+			//var_dump($login);
+
 			if(is_null($login) )
-			    return false;
+			    return NULL;
 
 			$this->db->where("usuario_login", $login);
 			$query = $this->db->get('TB_USUARIOS');
 			$row = $query->row_array();
-			if (isset($row)) 
+			if(isset($row)) 
 			{
-				$this->usuario_id = $row['usuario_id'];
-				$this->tipo_usuario_id = $row['tipo_usuario_id'];
-				$this->status_id = $row['status_id'];
-				$this->usuario_senha = $row['usuario_senha'];
-				$this->usuario_login = $row['usuario_login'];
-				$this->usuario_data_cadastro = $row['usuario_data_cadastro'];
-				$this->email_id = $row['email_id'];
-				$this->usuario_data_cancelamento = $row['usuario_data_cancelamento'];
+				$usuario = array(
+					"usuario_id" => $row['usuario_id'],
+					"tipo_usuario_id" => $row['tipo_usuario_id'],
+					"status_id" => $row['status_id'],
+					"usuario_senha" => $row['usuario_senha'],
+					"usuario_login" => $row['usuario_login'],
+					"usuario_data_cadastro" => $row['usuario_data_cadastro'],
+					"usuario_data_cancelamento" => $row['usuario_data_cancelamento']
+				);
+
+				return $usuario;
 			}else
-				return null;
+				return NULL;
 		}
 		
 		public function retornar_id_prox_usuario($tipo_usuario_id){
@@ -153,12 +158,21 @@
 		
 		public function adicionar_usuario($usuario)
 		{
-			$this->db->insert('TB_USUARIOS',$usuario);
+			$this->db->insert("TB_USUARIOS",$usuario);
 
 			if($this->db->error()["code"] == 0)
 				return "SUCESSO";
 			else
 				return "ERRO";
+		}
+
+		public function retornar_max_id(){
+			$this->load->database();
+			$query = $this->db->query('select max(usuario_id) from TB_USUARIOS');
+			foreach ($query->result_array() as $row)
+			{
+				return $row["max(usuario_id)"];
+			}
 		}
 
 		public function retornar_proximo_usuario_id(){
@@ -169,4 +183,4 @@
 			return 123456;
 		}
 	}
-?>
+	

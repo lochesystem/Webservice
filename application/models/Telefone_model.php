@@ -47,4 +47,15 @@
 		    $this->telefone_numero = $telefone_numero;
 		    return $this;
 		}
+
+		public function adicionar_telefone($telefone)
+		{
+			$this->db->insert('TB_TELEFONES',$telefone);
+
+			if($this->db->error()["code"] == 0){
+				return $this->db->insert_id();
+			}else{
+				return "ERRO";
+			}
+		}
 	}
