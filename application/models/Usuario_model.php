@@ -121,8 +121,6 @@
 
 		public function retornar_por_login($login)
 		{
-			//var_dump($login);
-
 			if(is_null($login) )
 			    return NULL;
 

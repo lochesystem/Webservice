@@ -1,25 +1,7 @@
 <?php
 class Consumidor extends CI_Controller{
-    
-    public function lista_usuarios(){
-        $this->load->database();
-        $this->load->model("usuario_model");
-        $usuarios = $this->usuario_model->retornar_todos();
 
-        $dados = array("usuarios"=>$usuarios);
-        echo $this->myjson->my_json_encode($dados);
-    }
-
-    public function lista_emails(){
-        $this->load->database();
-        $this->load->model("email_model");
-        $emails = $this->email_model->retornar_todos();
-
-        $dados = array("emails"=>$emails);
-        echo $this->myjson->my_json_encode($dados);
-    }
-
-    public function adicionar()
+	public function adicionar()
     {
     	if((isset($_POST["tipo_usuario_id"]) && !empty($_POST["tipo_usuario_id"])) &&
             (isset($_POST["consumidor_nome"]) && !empty($_POST["consumidor_nome"])) &&
@@ -47,7 +29,10 @@ class Consumidor extends CI_Controller{
             $email_id = $this->email_model->adicionar_email($Email);
 
             if(!empty($email_id)){
+                $this->load->model("usuario_model");
+
                 $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($objeto_recebido["tipo_usuario_id"]);
+                //var_dump($prox_usuario_id);
 
                 $usuario = array(
                     "usuario_id" => $prox_usuario_id,
@@ -59,9 +44,9 @@ class Consumidor extends CI_Controller{
                     "email_id" => $email_id       
                 );
 
-                $this->load->model("usuario_model");
-                $retorno = $this->usuario_model->adicionar_usuario($usuario);
+                $lala = $this->usuario_model->adicionar_usuario($usuario);
                 $usuario_id = $this->usuario_model->retornar_max_id();
+                //var_dump($usuario_id);
 
                 if(!empty($usuario_id)){
                      $consumidor = array(
@@ -90,46 +75,38 @@ class Consumidor extends CI_Controller{
                     $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
 
                     if($resposta == "SUCESSO"){
-                        $resp = array("status" => "true",
-                                      "descricao" => "Consumidor cadastrado com sucesso!",
-                                      "objeto" => NULL
+                        $resp = array("status" => "ok",
+                                      "usuario_senha" => $usuario["usuario_senha"]
                         );
                         $dados = array("response"=>$resp);
                         echo $this->myjson->my_json_encode($dados);
                     }else{
-                        $resp = array("status" => "false",
-                                      "descricao" => "Erro ao inserir consumidor_telefone",
-                                      "objeto" => NULL
+                        $resp = array("status" => "nop",
+                                      "descricao" => "Erro ao inserir consumidor_telefone"
                         );
                         $dados = array("response"=>$resp);
                         echo $this->myjson->my_json_encode($dados);
                     }
                 }else{
-                    $resp = array("status" => "false",
-                                  "descricao" => "Erro ao retornar usuario_id",
-                                  "objeto" => NULL
+                    $resp = array("status" => "nop",
+                                  "descricao" => "Erro ao retornar usuario_id"
                     );
                     $dados = array("response"=>$resp);
                     echo $this->myjson->my_json_encode($dados);
                 }
 
             }else{
-                $resp = array("status" => "false",
-                              "descricao" => "Erro ao retornar email_id",
-                              "objeto" => NULL
-                );
+                $resp = array("status" => "nop",
+                              "descricao" => "Erro ao retornar email_id");
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
             }
     	}else{
-            $resp = array("status" => "false",
-                          "descricao" => "Parametros inválidos",
-                          "objeto" => NULL
+            $resp = array("status" => "nop",
+                          "descricao" => "Parametros inválidos"
             );
             $dados = array("response"=>$resp);
             echo $this->myjson->my_json_encode($dados);
     	}
     }
-
-
 }

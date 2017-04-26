@@ -43,6 +43,4 @@
 			$query = $this->db->query('select * from TB_EMAILS');
 			return $query->result_array();
 		}
-
-
 	}
