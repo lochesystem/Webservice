@@ -1,5 +1,15 @@
 <?php
 class Consumidor extends CI_Controller{
+    
+     public function lista_usuarios(){
+        $this->load->database();
+        $this->load->model("usuario_model");
+        $usuarios = $this->usuario_model->retornar_todos();
+
+        $dados = array("usuarios"=>$usuarios);
+        echo $this->myjson->my_json_encode($dados);
+    }
+
     public function autenticar()
     {
         if((isset($_POST["usuario_login"]) && !empty($_POST["usuario_login"])) &&

@@ -1,24 +1,5 @@
 <?php
 class Consumidor extends CI_Controller{
-    
-    public function lista_usuarios(){
-        $this->load->database();
-        $this->load->model("usuario_model");
-        $usuarios = $this->usuario_model->retornar_todos();
-
-        $dados = array("usuarios"=>$usuarios);
-        echo $this->myjson->my_json_encode($dados);
-    }
-
-    public function lista_emails(){
-        $this->load->database();
-        $this->load->model("email_model");
-        $emails = $this->email_model->retornar_todos();
-
-        $dados = array("emails"=>$emails);
-        echo $this->myjson->my_json_encode($dados);
-    }
-
     public function adicionar()
     {
     	if((isset($_POST["tipo_usuario_id"]) && !empty($_POST["tipo_usuario_id"])) &&
@@ -130,6 +111,5 @@ class Consumidor extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
     	}
     }
-
 
 }
