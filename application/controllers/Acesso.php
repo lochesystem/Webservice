@@ -1,7 +1,7 @@
 <?php
-class Consumidor extends CI_Controller{
+class Acesso extends CI_Controller{
     
-     public function lista_usuarios(){
+    public function lista_usuarios(){
         $this->load->database();
         $this->load->model("usuario_model");
         $usuarios = $this->usuario_model->retornar_todos();
@@ -41,7 +41,7 @@ class Consumidor extends CI_Controller{
                 }else{
                     $resp = array(
                         "status" => "false",
-                        "descricao" => "Senha inválida!"
+                        "descricao" => "Senha inválida!",
                         "objeto" => NULL
                     );
                     $dados = array("response"=>$resp);

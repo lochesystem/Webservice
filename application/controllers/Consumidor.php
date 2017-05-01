@@ -1,5 +1,6 @@
 <?php
 class Consumidor extends CI_Controller{
+
     public function adicionar()
     {
     	if((isset($_POST["tipo_usuario_id"]) && !empty($_POST["tipo_usuario_id"])) &&
@@ -28,6 +29,7 @@ class Consumidor extends CI_Controller{
             $email_id = $this->email_model->adicionar_email($Email);
 
             if(!empty($email_id)){
+                $this->load->model("usuario_model");
                 $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($objeto_recebido["tipo_usuario_id"]);
 
                 $usuario = array(
