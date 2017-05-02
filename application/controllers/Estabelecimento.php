@@ -41,74 +41,95 @@ class Estabelecimento extends CI_Controller{
                                      'telefone_numero' => $this->input->post("telefone_numero"),
                                      );
 
-            $Email = array(
-                "email_descricao" => $objeto_recebido["email_descricao"]
+            $Endereco = array(
+                'endereco_rua' => $objeto_recebido["endereco_rua"],
+                'endereco_numero' => $objeto_recebido["endereco_numero"],
+                'endereco_complemento' => $objeto_recebido["endereco_complemento"],
+                'endereco_bairro' => $objeto_recebido["endereco_bairro"],
+                'endereco_cep' => $objeto_recebido["endereco_cep"],
+                'estado_id' => $objeto_recebido["estado_id"],
+                'cidade_id' => $objeto_recebido["cidade_id"],
             );
+            $this->load->model("endereco_model");
+            $endereco_id = $this->endereco_model->adicionar($Endereco);
 
-            $this->load->model("email_model");
-            $email_id = $this->email_model->adicionar_email($Email);
-
-            if(!empty($email_id)){
-                $this->load->model("usuario_model");
-
-                $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario(2);
-                //var_dump($prox_usuario_id);
-
-                $usuario = array(
-                    "usuario_id" => $prox_usuario_id,
-                    "tipo_usuario_id" => 2,
-                    "status_id" => 4,
-                    "usuario_senha" => $objeto_recebido["telefone_ddd"].$objeto_recebido["telefone_numero"],
-                    "usuario_login" => $objeto_recebido["email_descricao"],
-                    "usuario_data_cadastro" => date(),
-                    "email_id" => $email_id       
-                );
-
-                $this->usuario_model->adicionar_usuario($usuario);
-
-                $estabelecimeto = array(
-                    "estabelecimento_cnpj" => $objeto_recebido["estabelecimento_cnpj"],
-                    "estabelecimento_razao_social" => $objeto_recebido["estabelecimento_razao_social"],
-                    "estabelecimento_nome_fantasia" => $objeto_recebido["estabelecimento_nome_fantasia"],
-                    "estabelecimento_inscrição_estatual" => $objeto_recebido["estabelecimento_inscrição_estatual"] 
-                    "estabelecimento_inscricao_municipal" => $objeto_recebido["estabelecimento_inscricao_municipal"]    
-                    "tipo_estabelecimento_id" => $objeto_recebido["tipo_estabelecimento_id"]           
-                );
-                $this->load->model("estabelecimento_model");
-                $resp = $this->estabelecimento_model->adicionar($estabelecimento);
-
-                $telefone = array(
-                    "tipo_telefone_id" => $objeto_recebido["tipo_telefone_id"],
-                    "telefone_ddd" => $objeto_recebido["telefone_ddd"],
-                    "telefone_numero" => $objeto_recebido["telefone_numero"]    
-                );
-                $this->load->model("telefone_model");
-                $telefone_id = $this->telefone_model->adicionar_telefone($telefone);
-
-                    $consumidor_telefone = array(
-                        "usuario_id" => $usuario_id,
-                        "tipo_usuario_id" => $objeto_recebido["tipo_usuario_id"],
-                        "telefone_id" => $telefone_id    
+            if(!empty($endereco_id)){
+                    $estabelecimento = array(
+                        "estabelecimento_cnpj" => $objeto_recebido["estabelecimento_cnpj"],
+                        "endereco_id" => $endereco_id,
+                        "estabelecimento_razao_social" => $objeto_recebido["estabelecimento_razao_social"],
+                        "estabelecimento_nome_fantasia" => $objeto_recebido["estabelecimento_nome_fantasia"],
+                        "estabelecimento_inscrição_estatual" => $objeto_recebido["estabelecimento_inscrição_estatual"] 
+                        "estabelecimento_inscricao_municipal" => $objeto_recebido["estabelecimento_inscricao_municipal"]    
+                        "tipo_estabelecimento_id" => $objeto_recebido["tipo_estabelecimento_id"]           
                     );
-                    $this->load->model("consumidor_telefone_model");
-                    $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
+                    $this->load->model("estabelecimento_model");
+                    $resp = $this->estabelecimento_model->adicionar($estabelecimento);
+
+                    $this->load->model("usuario_model");
+                    $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario(2);
+                    $usuario = array(
+                        "usuario_id" => $prox_usuario_id,
+                        "tipo_usuario_id" => 2,
+                        "status_id" => 4,
+                        "usuario_senha" => $objeto_recebido["telefone_ddd"].$objeto_recebido["telefone_numero"],
+                        "usuario_login" => $objeto_recebido["email_descricao"],
+                        "usuario_data_cadastro" => date(),
+                        "email_id" => $email_id       
+                    );
+                    $this->usuario_model->adicionar_usuario($usuario);
+
+                    $Email = array(
+                        "email_descricao" => $objeto_recebido["email_descricao"],    
+                    );
+                    $this->load->model("email_model");
+                    $email_id = $this->email_model->adicionar_email($Email);
+
+                    $estabelecimento_email = array(
+                        "email_id" => $usuario_id,
+                        "estabelecimento_id" => $objeto_recebido["tipo_usuario_id"],
+                        "estabelecimento_cnpj" => $telefone_id,
+                        "estabelecimento_email_setor" => $telefone_id,
+                    );
+                    $this->load->model("estabelecimento_email_model");
+                    $resposta = $this->estabelecimento_email_model->adicionar($estabelecimento_email);
+
+                    $telefone = array(
+                        "tipo_telefone_id" => $objeto_recebido["tipo_telefone_id"],
+                        "telefone_ddd" => $objeto_recebido["telefone_ddd"],
+                        "telefone_numero" => $objeto_recebido["telefone_numero"]    
+                    );
+                    $this->load->model("telefone_model");
+                    $telefone_id = $this->telefone_model->adicionar_telefone($telefone);
+
+                    $estabelecimento_telefone = array(  
+                        "estabelecimento_id" => $objeto_recebido["tipo_usuario_id"],
+                        "estabelecimento_cnpj" => $telefone_id,
+                        "telefone_id" => $usuario_id,
+                        "estabelecimento_email_setor" => $telefone_id,
+                    );
+                    $this->load->model("estabelecimento_endereco_model");
+                    $resposta = $this->estabelecimento_endereco_model->adicionar($estabelecimento_telefone);
 
                     if($resposta == "SUCESSO"){
-                        $resp = array("status" => "ok",
-                                      "usuario_senha" => $usuario["usuario_senha"]
+                         $resp = array("status" => "ok",
+                                      "descricao" => "Estabelecimento Cadastrado com Sucesso!",
+                                      "objeto" => NULL
                         );
                         $dados = array("response"=>$resp);
                         echo $this->myjson->my_json_encode($dados);
                     }else{
                         $resp = array("status" => "nop",
-                                      "descricao" => "Erro ao inserir consumidor_telefone"
+                                      "descricao" => "Erro ao inserir consumidor_telefone",
+                                      "objeto" => NULL
                         );
                         $dados = array("response"=>$resp);
                         echo $this->myjson->my_json_encode($dados);
                     }
                 }else{
                     $resp = array("status" => "nop",
-                                  "descricao" => "Erro ao retornar usuario_id"
+                                  "descricao" => "Erro ao retornar usuario_id",
+                                  "objeto" => NULL
                     );
                     $dados = array("response"=>$resp);
                     echo $this->myjson->my_json_encode($dados);
@@ -116,13 +137,15 @@ class Estabelecimento extends CI_Controller{
 
             }else{
                 $resp = array("status" => "nop",
-                              "descricao" => "Erro ao retornar email_id");
+                              "descricao" => "Erro ao retornar email_id",
+                              "objeto" => NULL);
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
             }
     	}else{
             $resp = array("status" => "nop",
-                          "descricao" => "Parametros inválidos"
+                          "descricao" => "Parametros inválidos",
+                          "objeto" => NULL);
             );
             $dados = array("response"=>$resp);
             echo $this->myjson->my_json_encode($dados);
