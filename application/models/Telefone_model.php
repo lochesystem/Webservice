@@ -58,4 +58,8 @@
 				return "ERRO";
 			}
 		}
+
+		public function retornar_tipos_telefone(){
+			return $this->db->get("td_tipos_telefone")->result_array();
+		}
 	}
