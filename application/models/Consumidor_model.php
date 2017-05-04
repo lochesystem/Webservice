@@ -3,7 +3,7 @@
 	{
 		public function adicionar_consumidor($consumidor)
 		{
-			$this->db->insert('TB_CONSUMIDORES',$consumidor);
+			$this->db->insert('tb_consumidores',$consumidor);
 
 			if($this->db->error()["code"] == 0)
 				return "SUCESSO";

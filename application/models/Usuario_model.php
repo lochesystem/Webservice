@@ -93,7 +93,7 @@
 		}
 
 		public function retornar_todos(){
-			return $this->db->get("TB_USUARIOS")->result_array();
+			return $this->db->get("tb_usuarios")->result_array();
 		}
 
 		public function retornar_por_id($id)
@@ -102,7 +102,7 @@
 			    return false;
 
 			$this->db->where('usuario_id', $id);
-			$query = $this->db->get('TB_USUARIOS');
+			$query = $this->db->get('tb_usuarios');
 
 			$row = $query->row_array();
 			if (isset($row)) 
@@ -125,7 +125,7 @@
 			    return NULL;
 
 			$this->db->where("usuario_login", $login);
-			$query = $this->db->get('TB_USUARIOS');
+			$query = $this->db->get('tb_usuarios');
 			$row = $query->row_array();
 			if(isset($row)) 
 			{
@@ -156,7 +156,7 @@
 		
 		public function adicionar_usuario($usuario)
 		{
-			$this->db->insert("TB_USUARIOS",$usuario);
+			$this->db->insert("tb_usuarios",$usuario);
 
 			if($this->db->error()["code"] == 0)
 				return "SUCESSO";
@@ -166,7 +166,7 @@
 
 		public function retornar_max_id(){
 			$this->load->database();
-			$query = $this->db->query('select max(usuario_id) from TB_USUARIOS');
+			$query = $this->db->query('select max(usuario_id) from tb_usuarios');
 			foreach ($query->result_array() as $row)
 			{
 				return $row["max(usuario_id)"];

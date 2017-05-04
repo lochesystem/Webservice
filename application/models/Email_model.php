@@ -29,7 +29,7 @@
 
 		public function adicionar_email($email)
 		{
-			$this->db->insert("TB_EMAILS",$email);
+			$this->db->insert("tb_emails",$email);
 
 			if($this->db->error()["code"] == 0){
 				return $this->db->insert_id();
@@ -40,7 +40,7 @@
 
 		public function retornar_todos(){
 			$this->load->database();
-			$query = $this->db->query('select * from TB_EMAILS');
+			$query = $this->db->query('select * from tb_emails ');
 			return $query->result_array();
 		}
 	}

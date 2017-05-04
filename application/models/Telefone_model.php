@@ -50,7 +50,7 @@
 
 		public function adicionar_telefone($telefone)
 		{
-			$this->db->insert('TB_TELEFONES',$telefone);
+			$this->db->insert('tb_telefones',$telefone);
 
 			if($this->db->error()["code"] == 0){
 				return $this->db->insert_id();
