@@ -29,11 +29,7 @@ class Acesso extends CI_Controller{
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
             }else{
-                if($usuario["usuario_senha"] == $acesso->usuario_senha){
-
-                    $resp = $this->EnviarEmailAvisoAcesso($usuario["usuario_login"]);
-                    var_dump($resp);
-                    
+                if($usuario["usuario_senha"] == $acesso->usuario_senha){                    
                     $resp = array(
                         "status" => "true",
                         "descricao" => "Usuário autenticado com sucesso!",
@@ -61,27 +57,4 @@ class Acesso extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
         }
     }
-
-    public function EnviarEmailAvisoAcesso($destinatario)
-    {
-        $assunto = 'MLprojetos - Informativo';
-        $conteudo = 'Acesso autenticado na API com sucesso.';
-
-        if($this->enviaEmail($destinatario, $assunto, $conteudo))
-            echo "SUCESSO";
-        else
-            echo "FALHA";  
-    }
-
-    public function enviaEmail($destinatario, $assunto, $conteudo) {
-        $this->load->library('email');
-        $this->email->from('contato@mlprojetos.com', 'MLprojetos');
-        $this->email->to($destinatario);
-        $this->email->subject($assunto);
-        $this->email->message($conteudo);
-        if($this->email->send())
-            return true;
-        else
-            return false;                  
-    }   
 }

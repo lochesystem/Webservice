@@ -69,6 +69,8 @@ class Consumidor extends CI_Controller{
                     $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
 
                     if($resposta == "SUCESSO"){
+                        $this->EnviarEmailCadastroConsumidor($data);
+
                         $resp = array("status" => "true",
                                       "descricao" => "Consumidor cadastrado com sucesso!",
                                       "objeto" => NULL
@@ -109,4 +111,28 @@ class Consumidor extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
     	}
     }
+
+    public function EnviarEmailCadastroConsumidor($dadosConsumidor)
+    {
+        $assunto = 'MLprojetos - Cadastro de Consumidor';
+        $conteudo = 'Olá, ' .$dadosConsumidor->consumidor_nome. ' ' .$dadosConsumidor->consumidor_sobrenome. '</br></br> Seu cadastro foi realizado com sucesso. </br></br> Dados de Acesso:</br> Login: ' .$dadosConsumidor->email_descricao. ' </br> Senha: ' .$dadosConsumidor->usuario_senha. '</br></br> Seja Bem-vindo(a) !' ;
+
+        if($this->enviaEmail($dadosConsumidor->email_descricao, $assunto, $conteudo))
+            echo "SUCESSO";
+        else
+            echo "FALHA";  
+    }
+
+    public function enviaEmail($destinatario, $assunto, $conteudo) {
+        $this->load->library('email');
+        $this->email->from('contato@mlprojetos.com', 'MLprojetos');
+        $this->email->to($destinatario);
+        $this->email->subject($assunto);
+        $this->email->message($conteudo);
+        if($this->email->send())
+            return true;
+        else
+            return false;                  
+    }
+
 }
