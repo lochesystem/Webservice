@@ -109,5 +109,4 @@ class Consumidor extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
     	}
     }
-
 }
