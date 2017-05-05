@@ -115,7 +115,7 @@ class Consumidor extends CI_Controller{
     public function EnviarEmailCadastroConsumidor($dadosConsumidor)
     {
         $assunto = 'MLprojetos - Cadastro de Consumidor';
-        $conteudo = 'Olá, ' .$dadosConsumidor->consumidor_nome. ' ' .$dadosConsumidor->consumidor_sobrenome. '</br></br> Seu cadastro foi realizado com sucesso. </br></br> Dados de Acesso:</br> Login: ' .$dadosConsumidor->email_descricao. ' </br> Senha: ' .$dadosConsumidor->usuario_senha. '</br></br> Seja Bem-vindo(a) !' ;
+        $conteudo = 'Olá ' .$dadosConsumidor->consumidor_nome. ' ' .$dadosConsumidor->consumidor_sobrenome. ', Seja Bem-vindo(a) !</br></br> Seu cadastro foi realizado com sucesso. </br></br> Dados de Acesso:</br> Login: ' .$dadosConsumidor->email_descricao. ' </br> Senha: ' .$dadosConsumidor->usuario_senha. ;
 
         if($this->enviaEmail($dadosConsumidor->email_descricao, $assunto, $conteudo))
             echo "SUCESSO";
