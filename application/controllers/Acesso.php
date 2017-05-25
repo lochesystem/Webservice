@@ -10,8 +10,7 @@ class Acesso extends CI_Controller{
         echo $this->myjson->my_json_encode($dados);
     }
 
-    public function autenticar()
-    {
+    public function autenticar(){
         $acesso = json_decode(file_get_contents('php://input'));
 
         if((isset($acesso->usuario_login) && !empty($acesso->usuario_login) &&

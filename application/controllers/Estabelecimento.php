@@ -3,152 +3,84 @@ class Estabelecimento extends CI_Controller{
 
 	public function adicionar()
     {
-    	if((isset($_POST["estabelecimento_cnpj"]) && !empty($_POST["estabelecimento_cnpj"])) &&
-            (isset($_POST["estabelecimento_razao_social"]) && !empty($_POST["estabelecimento_razao_social"])) &&
-    		(isset($_POST["estabelecimento_nome_fantasia"]) && !empty($_POST["estabelecimento_nome_fantasia"])) &&
-    		(isset($_POST["estabelecimento_inscrição_estatual"]) && !empty($_POST["estabelecimento_inscrição_estatual"])) &&
-    		(isset($_POST["estabelecimento_inscricao_municipal"]) && !empty($_POST["estabelecimento_inscricao_municipal"])) &&
-            (isset($_POST["tipo_estabelecimento_id"]) && !empty($_POST["tipo_estabelecimento_id"])) &&
-            (isset($_POST["endereco_rua"]) && !empty($_POST["endereco_rua"])) &&
-            (isset($_POST["endereco_numero"]) && !empty($_POST["endereco_numero"])) &&
-            (isset($_POST["endereco_complemento"]) && !empty($_POST["endereco_complemento"])) &&
-            (isset($_POST["endereco_bairro"]) && !empty($_POST["endereco_bairro"])) &&
-            (isset($_POST["endereco_cep"]) && !empty($_POST["endereco_cep"])) &&
-            (isset($_POST["estado_id"]) && !empty($_POST["estado_id"])) &&
-            (isset($_POST["cidade_id"]) && !empty($_POST["cidade_id"])) &&
-            (isset($_POST["email_descricao"]) && !empty($_POST["email_descricao"])) &&
-            (isset($_POST["tipo_telefone_id"]) && !empty($_POST["tipo_telefone_id"])) &&
-            (isset($_POST["telefone_ddd"]) && !empty($_POST["telefone_ddd"])) &&
-            (isset($_POST["telefone_numero"]) && !empty($_POST["telefone_numero"]))
+        $data = json_decode(file_get_contents('php://input'));
+
+    	if((isset($data->estabelecimento_cnpj) && !empty($data->estabelecimento_cnpj)) &&
+            (isset($data->estabelecimento_razao_social) && !empty($data->estabelecimento_razao_social)) &&
+    		(isset($data->estabelecimento_nome_fantasia) && !empty($data->estabelecimento_nome_fantasia)) &&
+    		(isset($data->estabelecimento_inscrição_estatual) && !empty($data->estabelecimento_inscrição_estatual)) &&
+    		(isset($data->estabelecimento_inscricao_municipal) && !empty($data->estabelecimento_inscricao_municipal)) &&
+            (isset($data->tipo_estabelecimento_id) && !empty($data->tipo_estabelecimento_id)) &&
+            (isset($data->endereco_rua) && !empty($data->endereco_rua)) &&
+            (isset($data->endereco_numero) && !empty($data->endereco_numero)) &&
+            (isset($data->endereco_complemento) && !empty($data->endereco_complemento)) &&
+            (isset($data->endereco_bairro) && !empty($data->endereco_bairro)) &&
+            (isset($data->endereco_cep) && !empty($data->endereco_cep)) &&
+            (isset($data->estado_id) && !empty($data->estado_id)) &&
+            (isset($data->cidade_id) && !empty($data->cidade_id)) &&
+            (isset($data->email_descricao) && !empty($data->email_descricao)) &&
+            (isset($data->tipo_telefone_id) && !empty($data->tipo_telefone_id)) &&
+            (isset($data->telefone_ddd) && !empty($data->telefone_ddd)) &&
+            (isset($data->telefone_numero) && !empty($data->telefone_numero))
     	  )
     	{
-            $objeto_recebido = array('estabelecimento_cnpj' => $this->input->post("estabelecimento_cnpj"), 
-                                     'estabelecimento_razao_social' => $this->input->post("estabelecimento_razao_social"),
-                                     'estabelecimento_nome_fantasia' => $this->input->post("estabelecimento_nome_fantasia"),
-                                     'estabelecimento_inscrição_estatual' => $this->input->post("estabelecimento_inscrição_estatual"),
-                                     'estabelecimento_inscricao_municipal' => $this->input->post("estabelecimento_inscricao_municipal"),
-                                     'tipo_estabelecimento_id' => $this->input->post("tipo_estabelecimento_id"),
-                                     'endereco_rua' => $this->input->post("endereco_rua"),
-                                     'endereco_numero' => $this->input->post("endereco_numero"),
-                                     'endereco_complemento' => $this->input->post("endereco_complemento"),
-                                     'endereco_bairro' => $this->input->post("endereco_bairro"),
-                                     'endereco_cep' => $this->input->post("endereco_cep"),
-                                     'estado_id' => $this->input->post("estado_id"),
-                                     'cidade_id' => $this->input->post("cidade_id"),
-                                     'email_descricao' => $this->input->post("email_descricao"),
-                                     'tipo_telefone_id' => $this->input->post("tipo_telefone_id"),
-                                     'telefone_ddd' => $this->input->post("telefone_ddd"),
-                                     'telefone_numero' => $this->input->post("telefone_numero"),
-                                     );
+            $this->load->database();
+            $this->db->trans_begin();
 
-            $Endereco = array(
-                'endereco_rua' => $objeto_recebido["endereco_rua"],
-                'endereco_numero' => $objeto_recebido["endereco_numero"],
-                'endereco_complemento' => $objeto_recebido["endereco_complemento"],
-                'endereco_bairro' => $objeto_recebido["endereco_bairro"],
-                'endereco_cep' => $objeto_recebido["endereco_cep"],
-                'estado_id' => $objeto_recebido["estado_id"],
-                'cidade_id' => $objeto_recebido["cidade_id"],
-            );
-            $this->load->model("endereco_model");
-            $endereco_id = $this->endereco_model->adicionar($Endereco);
-
-            if(!empty($endereco_id)){
-                    $estabelecimento = array(
-                        "estabelecimento_cnpj" => $objeto_recebido["estabelecimento_cnpj"],
-                        "endereco_id" => $endereco_id,
-                        "estabelecimento_razao_social" => $objeto_recebido["estabelecimento_razao_social"],
-                        "estabelecimento_nome_fantasia" => $objeto_recebido["estabelecimento_nome_fantasia"],
-                        "estabelecimento_inscrição_estatual" => $objeto_recebido["estabelecimento_inscrição_estatual"] 
-                        "estabelecimento_inscricao_municipal" => $objeto_recebido["estabelecimento_inscricao_municipal"]    
-                        "tipo_estabelecimento_id" => $objeto_recebido["tipo_estabelecimento_id"]           
-                    );
-                    $this->load->model("estabelecimento_model");
-                    $resp = $this->estabelecimento_model->adicionar($estabelecimento);
-
-                    $this->load->model("usuario_model");
-                    $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario(2);
-                    $usuario = array(
-                        "usuario_id" => $prox_usuario_id,
-                        "tipo_usuario_id" => 2,
-                        "status_id" => 4,
-                        "usuario_senha" => $objeto_recebido["telefone_ddd"].$objeto_recebido["telefone_numero"],
-                        "usuario_login" => $objeto_recebido["email_descricao"],
-                        "usuario_data_cadastro" => date(),
-                        "email_id" => $email_id       
-                    );
-                    $this->usuario_model->adicionar_usuario($usuario);
-
-                    $Email = array(
-                        "email_descricao" => $objeto_recebido["email_descricao"],    
-                    );
-                    $this->load->model("email_model");
-                    $email_id = $this->email_model->adicionar_email($Email);
-
-                    $estabelecimento_email = array(
-                        "email_id" => $usuario_id,
-                        "estabelecimento_id" => $objeto_recebido["tipo_usuario_id"],
-                        "estabelecimento_cnpj" => $telefone_id,
-                        "estabelecimento_email_setor" => $telefone_id,
-                    );
-                    $this->load->model("estabelecimento_email_model");
-                    $resposta = $this->estabelecimento_email_model->adicionar($estabelecimento_email);
-
-                    $telefone = array(
-                        "tipo_telefone_id" => $objeto_recebido["tipo_telefone_id"],
-                        "telefone_ddd" => $objeto_recebido["telefone_ddd"],
-                        "telefone_numero" => $objeto_recebido["telefone_numero"]    
-                    );
-                    $this->load->model("telefone_model");
-                    $telefone_id = $this->telefone_model->adicionar_telefone($telefone);
-
-                    $estabelecimento_telefone = array(  
-                        "estabelecimento_id" => $objeto_recebido["tipo_usuario_id"],
-                        "estabelecimento_cnpj" => $telefone_id,
-                        "telefone_id" => $usuario_id,
-                        "estabelecimento_email_setor" => $telefone_id,
-                    );
-                    $this->load->model("estabelecimento_endereco_model");
-                    $resposta = $this->estabelecimento_endereco_model->adicionar($estabelecimento_telefone);
-
-                    if($resposta == "SUCESSO"){
-                         $resp = array("status" => "ok",
-                                      "descricao" => "Estabelecimento Cadastrado com Sucesso!",
-                                      "objeto" => NULL
-                        );
-                        $dados = array("response"=>$resp);
-                        echo $this->myjson->my_json_encode($dados);
-                    }else{
-                        $resp = array("status" => "nop",
-                                      "descricao" => "Erro ao inserir consumidor_telefone",
-                                      "objeto" => NULL
-                        );
-                        $dados = array("response"=>$resp);
-                        echo $this->myjson->my_json_encode($dados);
-                    }
-                }else{
-                    $resp = array("status" => "nop",
-                                  "descricao" => "Erro ao retornar usuario_id",
-                                  "objeto" => NULL
-                    );
-                    $dados = array("response"=>$resp);
-                    echo $this->myjson->my_json_encode($dados);
-                }
-
+            // Inserção endereço
+            $query = $this->db->query("
+                insert into tb_enderecos(endereco_rua, 
+                                         endereco_numero, 
+                                         endereco_complemento
+                                         endereco_bairro, 
+                                         endereco_cep, 
+                                         estado_id, 
+                                         cidade_id)
+                values('.$data->endereco_rua.',
+                        '.$data->endereco_numero.',
+                        '.$data->endereco_complemento.',
+                        '.$data->endereco_bairro.',
+                        '.$data->endereco_cep.', 
+                        '.'$data->estado_id.', 
+                        '.$data->cidade_id.')");
+            $row = $query->row();
+            if (isset($row))
+            {
+                var_dump($row);
+                echo $row->endereco_id;
             }else{
-                $resp = array("status" => "nop",
-                              "descricao" => "Erro ao retornar email_id",
-                              "objeto" => NULL);
-                $dados = array("response"=>$resp);
-                echo $this->myjson->my_json_encode($dados);
+                var_dump('nop');
+                echo 'NOP';
             }
-    	}else{
-            $resp = array("status" => "nop",
-                          "descricao" => "Parametros inválidos",
-                          "objeto" => NULL);
-            );
-            $dados = array("response"=>$resp);
-            echo $this->myjson->my_json_encode($dados);
-    	}
+
+            if ($this->db->trans_status() === FALSE)
+            {
+                var_dump("erro");
+                $this->db->trans_rollback();
+            }
+            else
+            {
+                var_dump("OK");
+                $this->db->trans_commit();
+            }
+        }else{
+            echo "Erro no recebimento de parametros";
+        }
+    }
+
+    public function getEstabelecimentos(){
+        $this->load->database();
+        $this->load->model("estabelecimento_model");
+        $estabelecimentos = $this->estabelecimento_model->retornar_estabelecimentos();
+        $dados = array("estabelecimentos"=>$estabelecimentos);
+        echo $this->myjson->my_json_encode($dados);
+    }
+
+    public function getEstabelecimentosPorCidadeEstado($estado_id, $cidade_id){
+        $this->load->database();
+        $this->load->model("estabelecimento_model");
+        $estabelecimentos = $this->estabelecimento_model->retornar_estabelecimentos_por_cidade_estado($estado_id, $cidade_id);
+        $dados = array("estabelecimentos"=>$estabelecimentos);
+        echo $this->myjson->my_json_encode($dados);
     }
 }
