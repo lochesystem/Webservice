@@ -80,7 +80,18 @@ class Estabelecimento extends CI_Controller{
         $this->load->database();
         $this->load->model("estabelecimento_model");
         $estabelecimentos = $this->estabelecimento_model->retornar_estabelecimentos_por_cidade_estado($estado_id, $cidade_id);
-        $dados = array("estabelecimentos"=>$estabelecimentos);
+        if(sizeof($estabelecimentos) == 0){
+            $obj = array("status" => "false",
+                        "descricao" => "Nenhum estabelecimentos encontrado!",
+                        "objeto" => NULL
+                     );
+        }else{
+            $obj = array("status" => "true",
+                      "descricao" => "Lista de estabelecimentos",
+                      "objeto" => $estabelecimentos
+                     );
+        }
+        $dados = array("response"=>$obj);
         echo $this->myjson->my_json_encode($dados);
     }
 }
