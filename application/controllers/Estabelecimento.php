@@ -31,7 +31,7 @@ class Estabelecimento extends CI_Controller{
             $query = $this->db->query("
                 insert into tb_enderecos(endereco_rua, 
                                          endereco_numero, 
-                                         endereco_complemento
+                                         endereco_complemento,
                                          endereco_bairro, 
                                          endereco_cep, 
                                          estado_id, 
@@ -41,27 +41,29 @@ class Estabelecimento extends CI_Controller{
                         '.$data->endereco_complemento.',
                         '.$data->endereco_bairro.',
                         '.$data->endereco_cep.', 
-                        '.'$data->estado_id.', 
+                        '.$data->estado_id.', 
                         '.$data->cidade_id.')");
-            $row = $query->row();
-            if (isset($row))
+
+            var_dump($query);
+
+            if ($query)
             {
-                var_dump($row);
-                echo $row->endereco_id;
+                echo "teste ok";
             }else{
                 var_dump('nop');
                 echo 'NOP';
             }
 
-            if ($this->db->trans_status() === FALSE)
+            if($this->db->trans_status() === FALSE)
             {
                 var_dump("erro");
                 $this->db->trans_rollback();
             }
             else
             {
-                var_dump("OK");
                 $this->db->trans_commit();
+                $dados = array("response"=>$obj);
+                echo $this->myjson->my_json_encode($dados);
             }
         }else{
             echo "Erro no recebimento de parametros";
@@ -72,9 +74,22 @@ class Estabelecimento extends CI_Controller{
         $this->load->database();
         $this->load->model("estabelecimento_model");
         $estabelecimentos = $this->estabelecimento_model->retornar_estabelecimentos();
-        $dados = array("estabelecimentos"=>$estabelecimentos);
+
+        if(sizeof($estabelecimentos) == 0){
+            $obj = array("status" => "false",
+                        "descricao" => "Nenhum estabelecimentos encontrado!",
+                        "objeto" => NULL
+                     );
+        }else{
+            $obj = array("status" => "true",
+                      "descricao" => "Lista de estabelecimentos",
+                      "objeto" => $estabelecimentos
+                     );
+        }
+
+        $dados = array("response"=>$obj);
         echo $this->myjson->my_json_encode($dados);
-    }
+    } 
 
     public function getEstabelecimentosPorCidadeEstado($estado_id, $cidade_id){
         $this->load->database();
