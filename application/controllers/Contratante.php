@@ -71,4 +71,25 @@ class Contratante extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
         }
     }
+
+    public function getContratantes(){
+        $this->load->database();
+        $this->load->model("contratante_model");
+        $contratantes = $this->contratante_model->retornar_todos();
+
+        if(sizeof($contratantes) == 0){
+            $obj = array("status" => "false",
+                        "descricao" => "Nenhum contratante cadastrado!",
+                        "objeto" => NULL
+                     );
+        }else{
+            $obj = array("status" => "true",
+                      "descricao" => "Lista de contratantes",
+                      "objeto" => $contratantes
+                     );
+        }
+
+        $dados = array("response"=>$obj);
+        echo $this->myjson->my_json_encode($dados);
+    } 
 }
