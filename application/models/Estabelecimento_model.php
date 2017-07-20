@@ -2,6 +2,17 @@
 
 class Estabelecimento_model extends CI_Model
 {
+	public function adicionar($estabelecimento)
+	{
+		$this->db->insert("tb_estabelecimentos",$estabelecimento);
+
+		if($this->db->error()["code"] == 0){
+			return $this->db->insert_id();
+		}else{
+			return "ERRO";
+		}
+	}
+
 	public function retornar_estabelecimentos(){
 		$this->load->database();
 		$query = $this->db->query('
@@ -31,7 +42,7 @@ class Estabelecimento_model extends CI_Model
 
 		$estabelecimentos = array();
 
-		foreach ($query->result() as $row)
+		foreach($query->result() as $row)
 		{
 			$estabelecimento = array('estabelecimento_id' => $row->estabelecimento_id,
 									 'estabelecimento_nome_fantasia' => $row->estabelecimento_nome_fantasia,

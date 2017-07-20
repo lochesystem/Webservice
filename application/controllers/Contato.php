@@ -1,7 +1,9 @@
 
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+
 class Contato extends CI_Controller{
-    
     public function getTiposTelefone(){
         $this->load->database();
         $this->load->model("telefone_model");

@@ -1,97 +1,6 @@
 <?php
 	class Usuario_model extends CI_Model
 	{
-		private $usuario_id;
-		private $tipo_usuario_id;
-		private $status_id;
-		private $usuario_login;
-		private $usuario_senha;
-		private $usuario_data_cadastro;
-		private $email_id;
-		private $usuario_data_cancelamento;
-
-		public function getUsuario_id()
-		{
-		    return $this->usuario_id;
-		}
-
-		public function setUsuario_id($id)
-		{
-		    $this->usuario_id = $id;
-		    return $this;
-		}
-
-		public function getTipo_usuario_id()
-		{
-		    return $this->tipo_usuario_id;
-		}
-		public function setTipo_usuario_id($tipo_usuario_id)
-		{
-		    $this->tipo_usuario_id = $tipo_usuario_id;
-		    return $this;
-		}
-
-		public function getStatus_id()
-		{
-		    return $this->status_id;
-		}
-		public function setStatus_id($status_id)
-		{
-		    $this->status_id = $status_id;
-		    return $this;
-		}
-
-		public function getUsuario_senha()
-		{
-		    return $this->usuario_senha;
-		}
-		public function setUsuario_senha($usuario_senha)
-		{
-		    $this->usuario_senha = $usuario_senha;
-		    return $this;
-		}
-
-		public function getUsuario_login()
-		{
-		    return $this->usuario_login;
-		}
-		public function setUsuario_login($usuario_login)
-		{
-		    $this->usuario_login = $usuario_login;
-		    return $this;
-		}
-
-		public function getUsuario_data_cadastro()
-		{
-		    return $this->usuario_data_cadastro;
-		}
-		public function setUsuario_data_cadastro($usuario_data_cadastro)
-		{
-		    $this->usuario_data_cadastro = $usuario_data_cadastro;
-		    return $this;
-		}
-
-		public function getEmail_id()
-		{
-		    return $this->email_id;
-		}
-		 
-		public function setEmail_id($email_id)
-		{
-		    $this->email_id = $email_id;
-		    return $this;
-		}
-
-		public function getUsuario_data_cancelamento()
-		{
-		    return $this->usuario_data_cancelamento;
-		}
-		public function setUsuario_data_cancelamento($usuario_data_cancelamento)
-		{
-		    $this->usuario_data_cancelamento = $usuario_data_cancelamento;
-		    return $this;
-		}
-
 		public function retornar_todos(){
 			return $this->db->get("tb_usuarios")->result_array();
 		}
@@ -147,15 +56,16 @@
 		public function retornar_id_prox_usuario($tipo_usuario_id){
 			$this->load->database();
 			$query = $this->db->query('select fn_proximo_id_usuario('.$tipo_usuario_id.')');
-
+			
 			foreach ($query->result_array() as $row)
 			{
-				return $row['fn_proximo_id_usuario(1)'];
+				return $row['fn_proximo_id_usuario('.$tipo_usuario_id.')'];
 			}
 		}
 		
 		public function adicionar_usuario($usuario)
 		{
+			$this->load->database();
 			$this->db->insert("tb_usuarios",$usuario);
 
 			if($this->db->error()["code"] == 0)
@@ -164,9 +74,9 @@
 				return "ERRO";
 		}
 
-		public function retornar_max_id(){
+		public function retornar_max_id($tipo_usuario_id){
 			$this->load->database();
-			$query = $this->db->query('select max(usuario_id) from tb_usuarios');
+			$query = $this->db->query('select max(usuario_id) from tb_usuarios where tipo_usuario_id = '.$tipo_usuario_id.'');
 			foreach ($query->result_array() as $row)
 			{
 				return $row["max(usuario_id)"];

@@ -1,8 +1,8 @@
 <?php
-class Email_model extends CI_Model{
-		public function adicionar($email)
+class Endereco_model extends CI_Model{
+		public function adicionar($endereco)
 		{
-			$this->db->insert("tb_emails",$email);
+			$this->db->insert("tb_enderecos",$endereco);
 
 			if($this->db->error()["code"] == 0){
 				return $this->db->insert_id();
@@ -13,7 +13,7 @@ class Email_model extends CI_Model{
 
 		public function retornar_todos(){
 			$this->load->database();
-			$query = $this->db->query('select * from tb_emails ');
+			$query = $this->db->query('select * from tb_endereco ');
 			return $query->result_array();
 		}
 	}

@@ -1,31 +1,31 @@
 <?php
-class Consumidor extends CI_Controller{
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
 
-    public function adicionar()
-    {
+class Consumidor extends CI_Controller{
+    public function adicionar(){
         $data = json_decode(file_get_contents('php://input'));
 
-    	if((isset($data->tipo_usuario_id) && !empty($data->tipo_usuario_id)) &&
+        if((isset($data->tipo_usuario_id) && !empty($data->tipo_usuario_id)) &&
             (isset($data->consumidor_nome) && !empty($data->consumidor_nome)) &&
-    		(isset($data->consumidor_sobrenome) && !empty($data->consumidor_sobrenome)) &&
-    		(isset($data->email_descricao) && !empty($data->email_descricao)) &&
-    		(isset($data->tipo_telefone_id) && !empty($data->tipo_telefone_id)) &&
+            (isset($data->consumidor_sobrenome) && !empty($data->consumidor_sobrenome)) &&
+            (isset($data->email_descricao) && !empty($data->email_descricao)) &&
+            (isset($data->tipo_telefone_id) && !empty($data->tipo_telefone_id)) &&
             (isset($data->telefone_ddd) && !empty($data->telefone_ddd)) &&
             (isset($data->telefone_numero) && !empty($data->telefone_numero)) &&
             (isset($data->usuario_senha) && !empty($data->usuario_senha))
-    	  )
-    	{
+          ){
             $Email = array(
                 "email_descricao" => $data->email_descricao
             );
 
             $this->load->model("email_model");
-            $email_id = $this->email_model->adicionar_email($Email);
+            $email_id = $this->email_model->adicionar($Email);
 
             if(!empty($email_id)){
                 $this->load->model("usuario_model");
                 $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($data->tipo_usuario_id);
-
+                var_dump($prox_usuario_id);
                 date_default_timezone_set('America/Sao_Paulo');
                 $usuario = array(
                     "usuario_id" => $prox_usuario_id,
@@ -37,7 +37,7 @@ class Consumidor extends CI_Controller{
                     "email_id" => $email_id);
                 $this->load->model("usuario_model");
                 $retorno = $this->usuario_model->adicionar_usuario($usuario);
-                $usuario_id = $this->usuario_model->retornar_max_id();
+                $usuario_id = $this->usuario_model->retornar_max_id($data->tipo_usuario_id);
 
                 if(!empty($usuario_id)){
                      $consumidor = array(
@@ -64,6 +64,7 @@ class Consumidor extends CI_Controller{
                     );
                     $this->load->model("consumidor_telefone_model");
                     $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
+                    $
 
                     if($resposta == "SUCESSO"){
                         $this->EnviarEmailCadastroConsumidor($data);
@@ -98,18 +99,17 @@ class Consumidor extends CI_Controller{
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
             }
-    	}else{
+        }else{
             $resp = array("status" => "false",
                           "descricao" => "Parametros inválidos",
                           "objeto" => NULL
             );
             $dados = array("response"=>$resp);
             echo $this->myjson->my_json_encode($dados);
-    	}
+        }
     }
 
-    public function editar()
-    {
+    public function editar(){
         $data = json_decode(file_get_contents('php://input'));
 
         if((isset($data->usuario_id) && !empty($data->usuario_id)) &&
@@ -137,7 +137,6 @@ class Consumidor extends CI_Controller{
         }  
     }
 
-
     public function getConsumidor($usuario_id, $tipo_usuario_id){
         $this->load->database();
         $this->load->model("consumidor_model");
@@ -149,9 +148,8 @@ class Consumidor extends CI_Controller{
         echo $this->myjson->my_json_encode($dados);
     }
 
-    public function EnviarEmailCadastroConsumidor($dadosConsumidor)
-    {
-        $assunto = 'MLprojetos - Cadastro de Consumidor';
+    public function EnviarEmailCadastroConsumidor($dadosConsumidor){
+        $assunto = 'Smaket - Cadastro de Consumidor';
         $conteudo = 'Olá ' .$dadosConsumidor->consumidor_nome. ' ' .$dadosConsumidor->consumidor_sobrenome. ', Seja Bem-vindo(a) !</br></br> Seu cadastro foi realizado com sucesso. </br></br> Dados de Acesso:</br> Login: ' .$dadosConsumidor->email_descricao. ' </br> Senha: ' .$dadosConsumidor->usuario_senha;
 
         if($this->EnviaEmail($dadosConsumidor->email_descricao, $assunto, $conteudo))

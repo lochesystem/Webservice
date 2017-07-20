@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+
 class Acesso extends CI_Controller{
     
     public function lista_usuarios(){
@@ -55,5 +58,9 @@ class Acesso extends CI_Controller{
             $dados = array("response"=>$resp);
             echo $this->myjson->my_json_encode($dados);
         }
+    }
+
+    public function ativarAcesso(){
+        $this->load->view('ativacao_cadastro_consumidor');
     }
 }
