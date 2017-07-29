@@ -19,7 +19,11 @@
                 <td bgcolor="#FFFFFF" align="center">
                     <table width="650px" cellspacing="0" cellpadding="3" class="container">
                         <tr>
-                            <td><?=$mensagem?></td>
+                            <td>
+                                <?php
+                                   echo $mensagem
+                                ?>
+                            </td>
                         </tr>
                     </table>
                 </td>

@@ -23,6 +23,7 @@ class Consumidor extends CI_Controller{
             (isset($data->token) && !empty($data->token))
           )
         {
+
             if($data->token == "Sw280717"){
 
                 $Email = array(
@@ -190,9 +191,9 @@ class Consumidor extends CI_Controller{
          * Se o usuário escolheu o envio com template, passa o conteúdo do template para a mensagem
          * caso contrário passa somente o conteúdo do campo 'mensagem'
         */
-        $mensagem = "Olá " + $consumidor->consumidor_nome + ", <br/> Agradeçemos pelo seu cadastro. <br/> Atravês do SmarketApp você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!";
-
-        $this->email->message($this->load->view('email-template',$mensagem, TRUE));
+        $mensagem = 'Olá ' + $consumidor->consumidor_nome + ', <br/> Agradeçemos pelo seu cadastro. <br/> Atravês do SmarketApp você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!';
+        $dados = array("mensagem" => $mensagem);
+        $this->email->message($this->load->view("email-template", $dados, true));
 
         if($this->email->send())
         {
