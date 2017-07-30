@@ -23,7 +23,6 @@ class Consumidor extends CI_Controller{
             (isset($data->token) && !empty($data->token))
           )
         {
-
             if($data->token == "Sw280717"){
 
                 $Email = array(
@@ -77,7 +76,7 @@ class Consumidor extends CI_Controller{
                         
                         if($resposta == "SUCESSO")
                         {
-                            EnviarEmail($data);
+                            $this->EnviarEmail($data);
 
                             $resp = array("status" => "true",
                                           "descricao" => "Consumidor cadastrado com sucesso!",
@@ -149,60 +148,46 @@ class Consumidor extends CI_Controller{
         echo $this->myjson->my_json_encode($dados);
     }
 
-    /*
-        public function EnviarEmailCadastroConsumidor($dadosConsumidor){
-            $assunto = 'Smaket - Cadastro de Consumidor';
-            $conteudo = 'Olá ' .$dadosConsumidor->consumidor_nome. ' ' .$dadosConsumidor->consumidor_sobrenome. ', Seja Bem-vindo(a) !</br></br> Seu cadastro foi realizado com sucesso. </br></br> Dados de Acesso:</br> Login: ' .$dadosConsumidor->email_descricao. ' </br> Senha: ' .$dadosConsumidor->usuario_senha;
-
-            if($this->EnviaEmail($dadosConsumidor->email_descricao, $assunto, $conteudo))
-                return true;
-            else
-                return false;  
-        }
-    */ 
-
     /* Responsável por enviar o email */
-    public function EnviarEmail($consumidor)
+    public function EnviarEmail($data)
     {
-        var_dump("Envio de Email...");
-        var_dump("Dados: " + $consumidor);
-
         // Carrega a library email
         $this->load->library('email');
-        //Recupera os consumidor do formulário
          
         //Inicia o processo de configuração para o envio do email
         $config['protocol'] = 'mail'; // define o protocolo utilizado
         $config['wordwrap'] = TRUE; // define se haverá quebra de palavra no texto
         $config['validate'] = TRUE; // define se haverá validação dos endereços de email
-        $config['mailtype'] = 'html';
+        $config['mailtype'] = 'html'; // tipo template
 
         // Inicializa a library Email, passando os parâmetros de configuração
         $this->email->initialize($config);
         
         // Define remetente e destinatário
         $this->email->from('contato@mlprojetos.com', 'Smarket'); // Remetente
-        $this->email->to('murilo.lfs@gmail.com',['Murilo']); // Destinatário
+        $this->email->to($data->email_descricao,[$data->consumidor_nome]); // Destinatário
  
         // Define o assunto do email
         $this->email->subject('Seja bem-vindo ao Smarket.');
  
-        /*
-         * Se o usuário escolheu o envio com template, passa o conteúdo do template para a mensagem
-         * caso contrário passa somente o conteúdo do campo 'mensagem'
-        */
-        $mensagem = 'Olá ' + $consumidor->consumidor_nome + ', <br/> Agradeçemos pelo seu cadastro. <br/> Atravês do SmarketApp você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!';
-        $dados = array("mensagem" => $mensagem);
+        // Preencher conteudo do template
+        $header = 'Olá ' . $data->consumidor_nome;
+        $p1 = 'Agradeçemos pelo seu cadastro!';
+        $p2 = 'Através do Smarket App você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!';
+        $footer = 'Equipe Smarket App';
+        $conteudo = array('header' => $header, 'p1' => $p1, 'p2' => $p2, 'footer' => $footer);
+
+        $dados = array("conteudo" => $conteudo);
         $this->email->message($this->load->view("email-template", $dados, true));
 
         if($this->email->send())
         {
-            $this->session->set_flashdata('SUCESSO','Email enviado com sucesso!');
+            //$this->session->set_flashdata('SUCESSO','Email enviado com sucesso!');
             var_dump("Email enviado com sucesso!");
         }
         else
         {
-            $this->session->set_flashdata('error',$this->email->print_debugger());
+            //$this->session->set_flashdata('error',$this->email->print_debugger());
             var_dump("Erro no disparo de email!");
         }
     }

@@ -1,45 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
 <html>
     <head>
+        <title>Smarket</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <title>Bem vindo ao Smarket!</title>
     </head>
-    <body>
-        <table cellspacing="0" cellpadding="0" border="0" width="100%">
-            <tr>
-                <td class="navbar navbar-inverse" align="center">
-                    <!-- This setup makes the nav background stretch the whole width of the screen. -->
-                    <table width="650px" cellspacing="0" cellpadding="3" class="container">
-                        <tr class="navbar navbar-inverse">
-                            <td colspan="4"><a class="brand" href="http://www.universidadecodeigniter.com.br">Apoio: Universidade CodeIgniter</a></td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td bgcolor="#FFFFFF" align="center">
-                    <table width="650px" cellspacing="0" cellpadding="3" class="container">
-                        <tr>
-                            <td>
-                                <?php
-                                   echo $mensagem
-                                ?>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td bgcolor="#FFFFFF" align="center">
-                    <table width="650px" cellspacing="0" cellpadding="3" class="container">
-                        <tr>
-                            <td>
-                                <hr>
-                                <p>&copy; Smarket - 2017</p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
+    <body style="min-width: 100% !important; margin: 0; padding: 0;">
+        <table bgcolor="#f6f8f1" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td>
+                        <table id="tableContent" class="content" align="center" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background-color: #fff;" bgcolor="#fff">
+                            <tbody>
+                                <tr>
+                                    <td><img src="http://www.mlprojetos.com/imagens/top.jpg"></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <br>
+                                        <h1 style="margin-left: 40px;"> 
+                                            <?php
+                                                echo $conteudo->header
+                                            ?>
+                                        </h1>
+                                        <br><br>
+                                        <p style="margin-left: 90px; margin-right: 90px; font-size: 1.6em;"> 
+                                            <?php
+                                                echo $conteudo->p1
+                                            ?>
+                                        </p>
+                                        <p style="margin-left: 90px; margin-right: 90px; font-size: 1.6em;"> 
+                                            <?php
+                                                echo $conteudo->p2
+                                            ?> 
+                                        </p>
+                                        <br><br>
+                                        <p align="right" style="margin-left: 90px; margin-right: 90px; font-size: 1.6em;">
+                                            <?php
+                                                echo $conteudo->footer
+                                            ?> 
+                                        </p>
+                                        <br><br>
+                                    </td>
+                                </tr>
+                                <tr style="text-align: center;">
+                                    <td>
+                                        <img src="http://www.mlprojetos.com/imagens/footer.jpg">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
         </table>
     </body>
 </html>

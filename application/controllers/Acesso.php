@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Acesso extends CI_Controller{
 
-    public function autenticar(){
+    public function Autenticar(){
         $acesso = json_decode(file_get_contents('php://input'));
 
         if(
@@ -74,4 +74,5 @@ class Acesso extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
         }        
     }
+
 }
