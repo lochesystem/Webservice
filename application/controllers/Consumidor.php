@@ -149,7 +149,7 @@ class Consumidor extends CI_Controller{
     }
 
     /* Responsável por enviar o email */
-    public function EnviarEmail($data)
+    public function EnviarEmail($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id)
     {
         // Carrega a library email
         $this->load->library('email');
@@ -164,30 +164,29 @@ class Consumidor extends CI_Controller{
         $this->email->initialize($config);
         
         // Define remetente e destinatário
-        $this->email->from('contato@mlprojetos.com', 'Smarket'); // Remetente
-        $this->email->to($data->email_descricao,[$data->consumidor_nome]); // Destinatário
+        $this->email->from('contato@mlprojetos.com', 'Smarket App'); // Remetente
+        $this->email->to($email_destinatario,[$nome_destinatario]); // Destinatário
  
         // Define o assunto do email
-        $this->email->subject('Seja bem-vindo ao Smarket.');
+        $this->email->subject('Seja bem-vindo ao Smarket App.');
  
         // Preencher conteudo do template
-        $header = 'Olá ' . $data->consumidor_nome;
+        $header = 'Olá ' . $nome_destinatario;
         $p1 = 'Agradeçemos pelo seu cadastro!';
         $p2 = 'Através do Smarket App você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!';
+        $p3 = 'Ative seu acesso clicando <a href="http://www.mlprojetos.com/webservice/index.php/acesso/aprovarcadastro/' . $usuario_id . '/' . $tipo_usuario_id . '/Sw280717"> aqui </a>.';
         $footer = 'Equipe Smarket App';
-        $conteudo = array('header' => $header, 'p1' => $p1, 'p2' => $p2, 'footer' => $footer);
+        $conteudo = array('header' => $header, 'p1' => $p1, 'p2' => $p2, 'p3' => $p3, 'footer' => $footer);
 
         $dados = array("conteudo" => $conteudo);
         $this->email->message($this->load->view("email-template", $dados, true));
 
         if($this->email->send())
         {
-            //$this->session->set_flashdata('SUCESSO','Email enviado com sucesso!');
             var_dump("Email enviado com sucesso!");
         }
         else
         {
-            //$this->session->set_flashdata('error',$this->email->print_debugger());
             var_dump("Erro no disparo de email!");
         }
     }

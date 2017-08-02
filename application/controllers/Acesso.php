@@ -30,17 +30,7 @@ class Acesso extends CI_Controller{
                 }
                 else
                 {
-                    if($usuario["usuario_senha"] == $acesso->usuario_senha)
-                    {
-                        $resp = array(
-                            "status" => "true",
-                            "descricao" => "Usuário autenticado com sucesso!",
-                            "objeto" => $usuario
-                        );
-                        $dados = array("response"=>$resp);
-                        echo $this->myjson->my_json_encode($dados);
-                    }
-                    else
+                    if($usuario["usuario_senha"] != $acesso->usuario_senha)
                     {
                         $resp = array(
                             "status" => "false",
@@ -48,7 +38,36 @@ class Acesso extends CI_Controller{
                             "objeto" => NULL
                         );
                         $dados = array("response"=>$resp);
-                        echo $this->myjson->my_json_encode($dados);
+                        echo $this->myjson->my_json_encode($dados);    
+                    }
+                    else
+                    {
+                        switch ($usuario["status_id"]) {
+                            case 1:
+                                $resp = array("status" => "false",
+                                              "descricao" => "Aguardando aprovação de cadastro!",
+                                              "objeto" => $usuario);
+                                $dados = array("response"=>$resp);
+                                echo $this->myjson->my_json_encode($dados);
+                            case 2:
+                                $resp = array("status" => "true",
+                                              "descricao" => "Usuário autenticado com sucesso!",
+                                              "objeto" => $usuario);
+                                $dados = array("response"=>$resp);
+                                echo $this->myjson->my_json_encode($dados);
+                            case 3:
+                                $resp = array("status" => "false",
+                                              "descricao" => "Usuário inativo!",
+                                              "objeto" => $usuario);
+                                $dados = array("response"=>$resp);
+                                echo $this->myjson->my_json_encode($dados);
+                            case 4:
+                                $resp = array("status" => "false",
+                                              "descricao" => "Usuário bloqueado!",
+                                              "objeto" => $usuario);
+                                $dados = array("response"=>$resp);
+                                echo $this->myjson->my_json_encode($dados);
+                        }
                     }
                 }
             }
@@ -74,5 +93,83 @@ class Acesso extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
         }        
     }
+
+    public function aprovarCadastro($usuario_id, $tipo_usuario_id, $token){
+        if(
+            isset($usuario_id) && !empty($usuario_id) &&
+            isset($tipo_usuario_id) && !empty($tipo_usuario_id) &&
+            isset($token) && !empty($token)
+        )
+        {
+            if($token == "Sw280717"){
+                $this->load->model("usuario_model");
+                $resp = $this->usuario_model->alterarStatus($usuario_id, $tipo_usuario_id, 2);
+                if($resp == 1){
+                    echo "Cadastro aprovado com sucesso !!!";
+                }else{
+                    echo "Cadastro já aprovado!";
+                }
+            }
+            else
+            {
+                $resp = array(
+                    "status" => "false",
+                    "descricao" => "Acesso webservice negado!",
+                    "objeto" => NULL
+                );
+                $dados = array("response"=>$resp);
+                echo $this->myjson->my_json_encode($dados);
+            }
+        }
+        else
+        {
+            $resp = array(
+                    "status" => "false",
+                    "descricao" => "Requisição invalida!",
+                    "objeto" => NULL
+            );
+            $dados = array("response"=>$resp);
+            echo $this->myjson->my_json_encode($dados);
+        }
+    }
+
+    /* ----------------- Classe base ------------------- 
+
+    public function AprovarCadastro(){
+        $data = json_decode(file_get_contents('php://input'));
+
+        if(
+            isset($data->usuario_login) && !empty($data->usuario_login) &&
+            isset($data->usuario_senha) && !empty($data->usuario_senha) &&
+            isset($data->token) && !empty($data->token)
+        )
+        {
+            if($acesso->token == "Sw280717"){
+
+            }
+            else
+            {
+                $resp = array(
+                    "status" => "false",
+                    "descricao" => "Acesso webservice negado!",
+                    "objeto" => NULL
+                );
+                $dados = array("response"=>$resp);
+                echo $this->myjson->my_json_encode($dados);
+            }
+        }
+        else
+        {
+            $resp = array(
+                    "status" => "false",
+                    "descricao" => "Requisição invalida!",
+                    "objeto" => NULL
+            );
+            $dados = array("response"=>$resp);
+            echo $this->myjson->my_json_encode($dados);
+        }
+    }
+
+    --------------------------------------------------- */
 
 }
