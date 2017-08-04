@@ -76,7 +76,7 @@ class Consumidor extends CI_Controller{
                         
                         if($resposta == "SUCESSO")
                         {
-                            $this->EnviarEmail($data);
+                            $this->EnviarEmail($data->email_descricao,$data->nome_destinatario,$usuario_id,$data->tipo_usuario_id);
 
                             $resp = array("status" => "true",
                                           "descricao" => "Consumidor cadastrado com sucesso!",
