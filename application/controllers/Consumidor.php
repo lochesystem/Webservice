@@ -76,8 +76,8 @@ class Consumidor extends CI_Controller{
                         
                         if($resposta == "SUCESSO")
                         {
-                            $this->EnviarEmail($data->email_descricao,$data->nome_destinatario,$usuario_id,$data->tipo_usuario_id);
-
+                            $enviou = $this->EnviarEmail($data->email_descricao,$data->nome_destinatario,$usuario_id,$data->tipo_usuario_id);
+                            
                             $resp = array("status" => "true",
                                           "descricao" => "Consumidor cadastrado com sucesso!",
                                           "objeto" => NULL
@@ -180,17 +180,11 @@ class Consumidor extends CI_Controller{
         $dados = array("conteudo" => $conteudo);
         $this->email->message($this->load->view("email-template", $dados, true));
 
-        $this->email->send()
-
-        /*
-        if($this->email->send())
-        {
-            var_dump("Email enviado com sucesso!");
+        if($this->email->send()){
+            return "Email enviado com sucesso!";
+        }else{
+            return "Erro no disparo de email!";
         }
-        else
-        {
-            var_dump("Erro no disparo de email!");
-        }
-        */
+        
     }
 }
