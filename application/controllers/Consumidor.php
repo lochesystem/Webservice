@@ -143,7 +143,6 @@ class Consumidor extends CI_Controller{
         $consumidor = $this->consumidor_model->retornar_dados_consumidor($usuario_id, $tipo_usuario_id);
         
         $dados = array("consumidor"=>$consumidor);
-        var_dump($dados);
 
         echo $this->myjson->my_json_encode($dados);
     }
@@ -181,6 +180,9 @@ class Consumidor extends CI_Controller{
         $dados = array("conteudo" => $conteudo);
         $this->email->message($this->load->view("email-template", $dados, true));
 
+        $this->email->send()
+
+        /*
         if($this->email->send())
         {
             var_dump("Email enviado com sucesso!");
@@ -189,5 +191,6 @@ class Consumidor extends CI_Controller{
         {
             var_dump("Erro no disparo de email!");
         }
+        */
     }
 }
