@@ -133,43 +133,4 @@ class Acesso extends CI_Controller{
         }
     }
 
-    /* ----------------- Classe base ------------------- 
-
-    public function AprovarCadastro(){
-        $data = json_decode(file_get_contents('php://input'));
-
-        if(
-            isset($data->usuario_login) && !empty($data->usuario_login) &&
-            isset($data->usuario_senha) && !empty($data->usuario_senha) &&
-            isset($data->token) && !empty($data->token)
-        )
-        {
-            if($acesso->token == "Sw280717"){
-
-            }
-            else
-            {
-                $resp = array(
-                    "status" => "false",
-                    "descricao" => "Acesso webservice negado!",
-                    "objeto" => NULL
-                );
-                $dados = array("response"=>$resp);
-                echo $this->myjson->my_json_encode($dados);
-            }
-        }
-        else
-        {
-            $resp = array(
-                    "status" => "false",
-                    "descricao" => "Requisição invalida!",
-                    "objeto" => NULL
-            );
-            $dados = array("response"=>$resp);
-            echo $this->myjson->my_json_encode($dados);
-        }
-    }
-
-    --------------------------------------------------- */
-
 }
