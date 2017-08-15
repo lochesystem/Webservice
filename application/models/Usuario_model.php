@@ -47,18 +47,22 @@
 			$query = $this->db->get('tb_usuarios');
 
 			$row = $query->row_array();
+
 			if (isset($row)) 
 			{
-				$this->usuario_id = $row['usuario_id'];
-				$this->tipo_usuario_id = $row['tipo_usuario_id'];
-				$this->status_id = $row['status_id'];
-				$this->usuario_senha = $row['usuario_senha'];
-				$this->usuario_login = $row['usuario_login'];
-				$this->usuario_data_cadastro = $row['usuario_data_cadastro'];
-				$this->email_id = $row['email_id'];
-				$this->usuario_data_cancelamento = $row['usuario_data_cancelamento'];
-			}else
+				$usuario = array(
+					"usuario_id" => $row['usuario_id'],
+					"tipo_usuario_id" => $row['tipo_usuario_id'],
+					"status_id" => $row['status_id'],
+					"usuario_senha" => $row['usuario_senha'],
+					"usuario_login" => $row['usuario_login'],
+					"usuario_data_cadastro" => $row['usuario_data_cadastro'],
+					"usuario_data_cancelamento" => $row['usuario_data_cancelamento']
+				);
+				return $usuario;
+			}else{
 				return null;
+			}
 		}
 
 		public function retornar_por_login($login)
@@ -114,6 +118,13 @@
 			{
 				return $row["max(usuario_id)"];
 			}
+		}
+
+		public function redefinir_senha($usuario_id, $tipo_usuario_id, $nova_senha){
+			$sql = "update tb_usuarios set usuario_senha = '$nova_senha' where usuario_id = $usuario_id and tipo_usuario_id = $tipo_usuario_id";
+			$this->db->query($sql);
+			$resp = $this->db->affected_rows();
+			return $resp;
 		}
 
 		public function retornar_proximo_usuario_id(){

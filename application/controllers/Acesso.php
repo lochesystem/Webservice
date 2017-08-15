@@ -133,19 +133,31 @@ class Acesso extends CI_Controller{
         }
     }
 
-    /* ----------------- Classe base ------------------- 
-
-    public function AprovarCadastro(){
+    /*
+    public function RecuperarSenha(){
         $data = json_decode(file_get_contents('php://input'));
 
-        if(
-            isset($data->usuario_login) && !empty($data->usuario_login) &&
-            isset($data->usuario_senha) && !empty($data->usuario_senha) &&
-            isset($data->token) && !empty($data->token)
-        )
+        if(isset($data->usuario_login) && !empty($data->usuario_login) &&
+           isset($data->token) && !empty($data->token))
         {
-            if($acesso->token == "Sw280717"){
+            if($data->token == "Sw280717"){
+                $this->load->model("usuario_model");
+                $usuario = $this->usuario_model->retornar_por_login($acesso->usuario_login);
 
+                if($usuario == NULL)
+                {
+                    $resp = array(
+                        "status" => "false",
+                        "descricao" => "Usuario não encontrato!",
+                        "objeto" => $usuario
+                    );
+                    $dados = array("response"=>$resp);
+                    echo $this->myjson->my_json_encode($dados);
+                }
+                else
+                {
+
+                }
             }
             else
             {
@@ -158,8 +170,66 @@ class Acesso extends CI_Controller{
                 echo $this->myjson->my_json_encode($dados);
             }
         }
-        else
+    }
+    */
+
+    public function RedefinirSenha(){
+        $data = json_decode(file_get_contents('php://input'));
+
+        if(isset($data->usuario_id) && !empty($data->usuario_id) &&
+           isset($data->tipo_usuario_id) && !empty($data->tipo_usuario_id) &&
+           isset($data->nova_senha) && !empty($data->nova_senha) &&
+           isset($data->token) && !empty($data->token))
         {
+            if($data->token == "Sw280717"){
+                
+                $this->load->model("usuario_model");
+                $usuario = $this->usuario_model->retornar_por_id_tipo($data->usuario_id, $data->tipo_usuario_id);
+
+                if($usuario != NULL)
+                {
+                    $x = $this->usuario_model->redefinir_senha($data->usuario_id, $data->tipo_usuario_id, $data->nova_senha);
+
+                    if($x == 1){
+                        $resp = array(
+                            "status" => "true",
+                            "descricao" => "Senha redefinida com sucesso!",
+                            "objeto" => NULL
+                        );
+                        $dados = array("response"=>$resp);
+                        echo $this->myjson->my_json_encode($dados);
+                    }else{
+                        $resp = array(
+                            "status" => "false",
+                            "descricao" => "Erro ao redefinir senha!",
+                            "objeto" => NULL
+                        );
+                        $dados = array("response"=>$resp);
+                        echo $this->myjson->my_json_encode($dados);
+                    }
+                }
+                else
+                {
+                    $resp = array(
+                        "status" => "false",
+                        "descricao" => "Usuario não encontrato!",
+                        "objeto" => $usuario
+                    );
+                    $dados = array("response"=>$resp);
+                    echo $this->myjson->my_json_encode($dados);
+                }
+            }
+            else
+            {
+                $resp = array(
+                    "status" => "false",
+                    "descricao" => "Acesso webservice negado!",
+                    "objeto" => NULL
+                );
+                $dados = array("response"=>$resp);
+                echo $this->myjson->my_json_encode($dados);
+            }
+        }else{
             $resp = array(
                     "status" => "false",
                     "descricao" => "Requisição invalida!",
@@ -170,6 +240,15 @@ class Acesso extends CI_Controller{
         }
     }
 
-    --------------------------------------------------- */
+    public function testeEnvioEmail(){
+        $this->load->helper("email");
+        $enviou = $this->email->EnviarEmail('murilo.lfs@gmail.com','Murilo Lourenço',1,1);
 
+        $resp = array("status" => "true",
+                      "descricao" => "teste",
+                      "objeto" => $enviou);
+
+        $dados = array("response"=>$resp);
+        echo $this->myjson->my_json_encode($dados);
+    }
 }

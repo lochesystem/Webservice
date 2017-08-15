@@ -37,6 +37,11 @@
                                                echo $conteudo[p3];
                                             ?> 
                                         </p>
+                                        <p style="margin-left: 90px; margin-right: 90px; font-size: 1.6em;"> 
+                                            <?php
+                                               echo $conteudo[p4];
+                                            ?> 
+                                        </p>
                                         <p align="right" style="margin-left: 90px; margin-right: 90px; font-size: 1.6em;">
                                             <?php
                                                 echo $conteudo[footer];
