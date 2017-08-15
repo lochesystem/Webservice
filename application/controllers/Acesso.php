@@ -133,46 +133,6 @@ class Acesso extends CI_Controller{
         }
     }
 
-    /*
-    public function RecuperarSenha(){
-        $data = json_decode(file_get_contents('php://input'));
-
-        if(isset($data->usuario_login) && !empty($data->usuario_login) &&
-           isset($data->token) && !empty($data->token))
-        {
-            if($data->token == "Sw280717"){
-                $this->load->model("usuario_model");
-                $usuario = $this->usuario_model->retornar_por_login($acesso->usuario_login);
-
-                if($usuario == NULL)
-                {
-                    $resp = array(
-                        "status" => "false",
-                        "descricao" => "Usuario não encontrato!",
-                        "objeto" => $usuario
-                    );
-                    $dados = array("response"=>$resp);
-                    echo $this->myjson->my_json_encode($dados);
-                }
-                else
-                {
-
-                }
-            }
-            else
-            {
-                $resp = array(
-                    "status" => "false",
-                    "descricao" => "Acesso webservice negado!",
-                    "objeto" => NULL
-                );
-                $dados = array("response"=>$resp);
-                echo $this->myjson->my_json_encode($dados);
-            }
-        }
-    }
-    */
-
     public function RedefinirSenha(){
         $data = json_decode(file_get_contents('php://input'));
 
