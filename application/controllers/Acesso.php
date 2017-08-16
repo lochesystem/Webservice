@@ -199,16 +199,4 @@ class Acesso extends CI_Controller{
             echo $this->myjson->my_json_encode($dados);
         }
     }
-
-    public function testeEnvioEmail(){
-        $this->load->helper("email");
-        $enviou = $this->email->EnviarEmail('murilo.lfs@gmail.com','Murilo Lourenço',1,1);
-
-        $resp = array("status" => "true",
-                      "descricao" => "teste",
-                      "objeto" => $enviou);
-
-        $dados = array("response"=>$resp);
-        echo $this->myjson->my_json_encode($dados);
-    }
 }

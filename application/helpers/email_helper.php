@@ -2,6 +2,8 @@
 
 function EnviarEmail($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id)
 {
+	var_dump("Até aqui ok...");
+	
     // Carrega a library email
     $this->load->library('email');
      
@@ -26,7 +28,7 @@ function EnviarEmail($email_destinatario, $nome_destinatario, $usuario_id, $tipo
     $p1 = "Agradeçemos pelo seu cadastro!";
     $p2 = "Através do Smarket App você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!";
     $p3 = "Ative seu acesso clicando no link abaixo:";
-    $p4 = "http://www.mlprojetos.com/webservice/index.php/acesso/aprovarcadastro/' . $usuario_id . '/' . $tipo_usuario_id . '/Sw280717";
+    $p4 = "http://www.mlprojetos.com/webservice/index.php/acesso/aprovarcadastro/$usuario_id/$tipo_usuario_id/Sw280717";
     $footer = "Equipe Smarket App";
     $conteudo = array('header' => $header, 'p1' => $p1, 'p2' => $p2, 'p3' => $p3, 'p4' => $p4, 'footer' => $footer);
 

@@ -76,8 +76,15 @@ class Consumidor extends CI_Controller{
                         
                         if($resposta == "SUCESSO")
                         {
-                            $enviou = $this->EnviarEmail($data->email_descricao,$data->nome_destinatario,$usuario_id,$data->tipo_usuario_id);
+                            //$enviou = $this->EnviarEmail($data->email_descricao,$data->nome_destinatario,$usuario_id,$data->tipo_usuario_id);
                             
+                            $this->load->helper("email");
+                            $enviou = $this->email->EnviarEmail($data->email_descricao,
+                                                                $data->nome_destinatario,
+                                                                $usuario_id,$data->tipo_usuario_id);
+
+                            var_dump($enviou);
+
                             $resp = array("status" => "true",
                                           "descricao" => "Consumidor cadastrado com sucesso!",
                                           "objeto" => NULL
@@ -147,16 +154,7 @@ class Consumidor extends CI_Controller{
         echo $this->myjson->my_json_encode($dados);
     }
 
-    public function testeEnvioEmail(){
-        $enviou = $this->EnviarEmail('murilo.lfs@gmail.com','Murilo Lourenço',1,1);
-        $resp = array("status" => "true",
-                      "descricao" => "teste",
-                      "objeto" => $enviou);
-        $dados = array("response"=>$resp);
-        echo $this->myjson->my_json_encode($dados);
-    }
-
-    /* Responsável por enviar o email */
+    /* Responsável por enviar o email 
     public function EnviarEmail($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id)
     {
         // Carrega a library email
@@ -183,7 +181,7 @@ class Consumidor extends CI_Controller{
         $p1 = "Agradeçemos pelo seu cadastro!";
         $p2 = "Através do Smarket App você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!";
         $p3 = "Ative seu acesso clicando no link abaixo:";
-        $p4 = "http://www.mlprojetos.com/webservice/index.php/acesso/aprovarcadastro/' . $usuario_id . '/' . $tipo_usuario_id . '/Sw280717";
+        $p4 = "http://www.mlprojetos.com/webservice/index.php/acesso/aprovarcadastro/$usuario_id/$tipo_usuario_id/Sw280717";
         $footer = "Equipe Smarket App";
         $conteudo = array('header' => $header, 'p1' => $p1, 'p2' => $p2, 'p3' => $p3, 'p4' => $p4, 'footer' => $footer);
 
@@ -196,4 +194,5 @@ class Consumidor extends CI_Controller{
             return "Erro no disparo de email!";
         }  
     }
+    */
 }
