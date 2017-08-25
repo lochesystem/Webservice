@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 
 class Consumidor extends CI_Controller{
-    
     function __construct(){
        parent::__construct();       
        $this->load->library('session');
@@ -23,89 +22,69 @@ class Consumidor extends CI_Controller{
             (isset($data->token) && !empty($data->token))
           )
         {
-            if($data->token == "Sw280717"){
+            $Email = array(
+                "email_descricao" => $data->email_descricao
+            );
+            $this->load->model("email_model");
+            $email_id = $this->email_model->adicionar($Email);
 
-                $Email = array(
-                    "email_descricao" => $data->email_descricao
-                );
-                $this->load->model("email_model");
-                $email_id = $this->email_model->adicionar($Email);
+            if(!empty($email_id)){
+                $this->load->model("usuario_model");
 
-                if(!empty($email_id))
-                {
-                    $this->load->model("usuario_model");
-
-                    $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($data->tipo_usuario_id);
+                $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($data->tipo_usuario_id);
                 
-                    $data = json_decode(file_get_contents('php://input'));
+                $data = json_decode(file_get_contents('php://input'));
 
-                    $usuario = array("usuario_id" => $prox_usuario_id,
-                                     "tipo_usuario_id" => $data->tipo_usuario_id,
-                                     "status_id" => 2, // Status Ativo
-                                     "usuario_senha" => $data->usuario_senha,
-                                     "usuario_login" => $data->email_descricao,
-                                     "usuario_data_cadastro" => date('Y-m-d H:i'),
-                                     "email_id" => $email_id);
+                $usuario = array("usuario_id" => $prox_usuario_id,
+                                 "tipo_usuario_id" => $data->tipo_usuario_id,
+                                 "status_id" => 2, // Status Ativo
+                                 "usuario_senha" => $data->usuario_senha,
+                                 "usuario_login" => $data->email_descricao,
+                                 "usuario_data_cadastro" => date('Y-m-d H:i'),
+                                 "email_id" => $email_id);
 
-                    $retorno = $this->usuario_model->adicionar_usuario($usuario);
-                    $usuario_id = $this->usuario_model->retornar_max_id($data->tipo_usuario_id);
+                $retorno = $this->usuario_model->adicionar_usuario($usuario);
+                $usuario_id = $this->usuario_model->retornar_max_id($data->tipo_usuario_id);
 
-                    if(!empty($usuario_id))
+                if(!empty($usuario_id))
+                {
+                    $consumidor = array("usuario_id" => $usuario_id,
+                                         "tipo_usuario_id" => $data->tipo_usuario_id,
+                                         "consumidor_nome" => $data->consumidor_nome,
+                                         "consumidor_sobrenome" => $data->consumidor_sobrenome);
+
+                    $this->load->model("consumidor_model");
+                    $resp = $this->consumidor_model->adicionar_consumidor($consumidor);
+
+                    $telefone = array("tipo_telefone_id" => $data->tipo_telefone_id,
+                                      "telefone_ddd" => $data->telefone_ddd,
+                                      "telefone_numero" => $data->telefone_numero);
+
+                    $this->load->model("telefone_model");
+                    $telefone_id = $this->telefone_model->adicionar_telefone($telefone);
+
+                    $consumidor_telefone = array("usuario_id" => $usuario_id,
+                                                 "tipo_usuario_id" => $data->tipo_usuario_id,
+                                                 "telefone_id" => $telefone_id);
+
+                    $this->load->model("consumidor_telefone_model");
+                    $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
+                    
+                    if($resposta == "SUCESSO")
                     {
-                        $consumidor = array("usuario_id" => $usuario_id,
-                                             "tipo_usuario_id" => $data->tipo_usuario_id,
-                                             "consumidor_nome" => $data->consumidor_nome,
-                                             "consumidor_sobrenome" => $data->consumidor_sobrenome);
-
-                        $this->load->model("consumidor_model");
-                        $resp = $this->consumidor_model->adicionar_consumidor($consumidor);
-
-                        $telefone = array("tipo_telefone_id" => $data->tipo_telefone_id,
-                                          "telefone_ddd" => $data->telefone_ddd,
-                                          "telefone_numero" => $data->telefone_numero);
-
-                        $this->load->model("telefone_model");
-                        $telefone_id = $this->telefone_model->adicionar_telefone($telefone);
-
-                        $consumidor_telefone = array("usuario_id" => $usuario_id,
-                                                     "tipo_usuario_id" => $data->tipo_usuario_id,
-                                                     "telefone_id" => $telefone_id);
-
-                        $this->load->model("consumidor_telefone_model");
-                        $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
+                        //$enviou = $this->EnviarEmailConfirmacaoCadastro($data->email_descricao,$data->consumidor_nome,$usuario_id,$data->tipo_usuario_id);
                         
-                        if($resposta == "SUCESSO")
-                        {
-                            //$enviou = $this->EnviarEmail($data->email_descricao,$data->nome_destinatario,$usuario_id,$data->tipo_usuario_id);
-                            
-                            $this->load->helper("email");
-                            $enviou = $this->email->EnviarEmail($data->email_descricao,
-                                                                $data->nome_destinatario,
-                                                                $usuario_id,$data->tipo_usuario_id);
-
-                            var_dump($enviou);
-
-                            $resp = array("status" => "true",
-                                          "descricao" => "Consumidor cadastrado com sucesso!",
-                                          "objeto" => NULL
-                            );
-                            $dados = array("response"=>$resp);
-                            echo $this->myjson->my_json_encode($dados);
-                        }
-                        else
-                        {
-                            $resp = array("status" => "false",
-                                          "descricao" => "Erro ao inserir consumidor_telefone",
-                                          "objeto" => NULL
-                            );
-                            $dados = array("response"=>$resp);
-                            echo $this->myjson->my_json_encode($dados);
-                        }
+                        $resp = array("status" => "true",
+                                      "descricao" => "Consumidor cadastrado com sucesso!",
+                                      "objeto" => NULL
+                        );
+                        $dados = array("response"=>$resp);
+                        echo $this->myjson->my_json_encode($dados);
                     }
                     else
                     {
                         $resp = array("status" => "false",
-                                      "descricao" => "Erro ao retornar usuario_id",
+                                      "descricao" => "Erro ao inserir consumidor_telefone",
                                       "objeto" => NULL
                         );
                         $dados = array("response"=>$resp);
@@ -115,7 +94,7 @@ class Consumidor extends CI_Controller{
                 else
                 {
                     $resp = array("status" => "false",
-                                  "descricao" => "Erro ao retornar email_id",
+                                  "descricao" => "Erro ao retornar usuario_id",
                                   "objeto" => NULL
                     );
                     $dados = array("response"=>$resp);
@@ -124,10 +103,9 @@ class Consumidor extends CI_Controller{
             }
             else
             {
-                $resp = array(
-                    "status" => "false",
-                    "descricao" => "Acesso webservice negado!",
-                    "objeto" => NULL
+                $resp = array("status" => "false",
+                              "descricao" => "Erro ao retornar email_id",
+                              "objeto" => NULL
                 );
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
@@ -147,15 +125,50 @@ class Consumidor extends CI_Controller{
     public function getConsumidor($usuario_id, $tipo_usuario_id){
         $this->load->database();
         $this->load->model("consumidor_model");
-        $consumidor = $this->consumidor_model->retornar_dados_consumidor($usuario_id, $tipo_usuario_id);
+        $consumidor = $this->consumidor_model->retornar_consumidor($usuario_id, $tipo_usuario_id);
         
-        $dados = array("consumidor"=>$consumidor);
-
+        if(sizeof($consumidor) == 0){
+            $obj = array("status" => "false",
+                         "descricao" => "Nenhum consumidor encontrado.",
+                         "objeto" => NULL
+                        );
+        }else{
+            $obj = array("status" => "true",
+                         "descricao" => "Dados do consumidor.",
+                         "objeto" => $consumidores
+                        );
+        }
+        $dados = array("response"=>$obj);
         echo $this->myjson->my_json_encode($dados);
     }
 
-    /* Responsável por enviar o email 
-    public function EnviarEmail($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id)
+    public function getConsumidores(){
+        $this->load->database();
+        $this->load->model("consumidor_model");
+        $consumidores = $this->consumidor_model->retornar_consumidores();
+
+        if(sizeof($consumidores) == 0){
+            $obj = array("status" => "false",
+                         "descricao" => "Nenhum consumidor encontrado!",
+                         "objeto" => NULL
+                        );
+        }else{
+            $obj = array("status" => "true",
+                         "descricao" => "Lista de consumidores",
+                         "objeto" => $consumidores
+                        );
+        }
+        $dados = array("response"=>$obj);
+        echo $this->myjson->my_json_encode($dados);
+    } 
+
+    //public function updateConsumidor(){
+    //}
+
+    /* ------------------------------------ HELPER ENVIO DE EMAIL ------------------------------------*/
+
+    /* Responsável por enviar o email */
+    public function EnviarEmailConfirmacaoCadastro($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id)
     {
         // Carrega a library email
         $this->load->library('email');
@@ -194,5 +207,4 @@ class Consumidor extends CI_Controller{
             return "Erro no disparo de email!";
         }  
     }
-    */
 }

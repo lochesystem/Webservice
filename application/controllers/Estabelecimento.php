@@ -3,7 +3,6 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 
 class Estabelecimento extends CI_Controller{
-
 	public function adicionar(){
         $data = json_decode(file_get_contents('php://input'));
 

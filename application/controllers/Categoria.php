@@ -63,20 +63,21 @@ class Categoria extends CI_Controller{
         $this->load->database();
         $this->load->model("categoria_model");
         $categoria = $this->categoria_model->retornar_categoria_id($categoria_id);
+
         if($categoria != NULL){
             $resp = array("status" => "true",
-                              "descricao" => "Sucesso!",
-                              "objeto" => $categoria
-                );
-                $dados = array("response"=>$resp);
-                echo $this->myjson->my_json_encode($dados); 
+                          "descricao" => "Sucesso!",
+                          "objeto" => $categoria
+                         );
+            $dados = array("response"=>$resp);
+            echo $this->myjson->my_json_encode($dados); 
         }else{
-             $resp = array("status" => "true",
-                              "descricao" => "Categoria não encontrada!",
-                              "objeto" => $categoria
-                );
-                $dados = array("response"=>$resp);
-                echo $this->myjson->my_json_encode($dados);
+            $resp = array("status" => "true",
+                          "descricao" => "Categoria não encontrada!",
+                          "objeto" => $categoria
+                         );
+            $dados = array("response"=>$resp);
+            echo $this->myjson->my_json_encode($dados);
         }        
     }
 
@@ -85,12 +86,12 @@ class Categoria extends CI_Controller{
         $this->load->model("categoria_model");
         $categorias = $this->categoria_model->retornar_categorias();
 
-         $resp = array("status" => "true",
-                          "descricao" => "Sucesso!",
-                          "objeto" => $categorias
-            );
-            $dados = array("response"=>$resp);
-            echo $this->myjson->my_json_encode($dados);
+        $resp = array("status" => "true",
+                        "descricao" => "Sucesso!",
+                        "objeto" => $categorias
+                      );
+        $dados = array("response"=>$resp);
+        echo $this->myjson->my_json_encode($dados);
     }
 
 }

@@ -112,5 +112,8 @@ class Estabelecimento_model extends CI_Model
 		}
 		return $estabelecimentos;	
 	}
+
+	//public function update_dados_estabelecimento(){
+	//}
 }
 
