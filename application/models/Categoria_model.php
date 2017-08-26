@@ -35,4 +35,17 @@ class Categoria_model extends CI_Model{
 			$query = $this->db->query('select * from tb_categorias');
 			return $query->result_array();
 		}
+
+		public function alterar_categoria($categoria)
+		{
+			$this->load->database();
+			$query = $this->db->query('update tb_categorias SET categoria_descricao = $categoria->categoria_descricao 
+									   WHERE categoria_id = $categoria->categoria_id');
+
+			if($this->db->error()["code"] == 0){
+				return "SUCESSO";
+			}else{
+				return "ERRO";
+			}
+		}
 	}
