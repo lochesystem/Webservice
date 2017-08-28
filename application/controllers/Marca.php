@@ -12,35 +12,36 @@ class Marca extends CI_Controller{
     public function adicionar(){
         $data = json_decode(file_get_contents('php://input'));
         var_dump($data);
-        if((isset($data->marca_descricao) && !empty($data->marca_descricao)) &&
-            (isset($data->token) && !empty($data->token))
+        if((isset($data->marca_descricao) && !empty($data->marca_descricao)) 
           )     
         {
-            if($data->token == "Sw280717"){
+            //if($data->token == "Sw280717"){
 
-                $marca = array("marca_descricao" => $data->marca_descricao);
-                $this->load->model("marca_model");
-                $resposta = $this->marca_model->adicionar($marca);
+            $marca = array("marca_descricao" => $data->marca_descricao);
+            $this->load->model("marca_model");
+            $resposta = $this->marca_model->adicionar($marca);
 
-                if($resposta == "SUCESSO")
-                {
-                   $resp = array(
-                        "status" => "true",
-                        "descricao" => "Marca cadastrada com sucesso!",
-                        "objeto" => NULL
-                    );
-                    $dados = array("response"=>$resp);
-                    echo $this->myjson->my_json_encode($dados);
-                }else{
-                    $resp = array(
-                        "status" => "false",
-                        "descricao" => "Falha ao cadastrar a marca!",
-                        "objeto" => NULL
-                        );
-                    $dados = array("response"=>$resp);
-                    echo $this->myjson->my_json_encode($dados);
-                }
+            if($resposta == "SUCESSO")
+            {
+               $resp = array(
+                    "status" => "true",
+                    "descricao" => "Marca cadastrada com sucesso!",
+                    "objeto" => NULL
+                );
+                $dados = array("response"=>$resp);
+                echo $this->myjson->my_json_encode($dados);
             }else{
+                $resp = array(
+                    "status" => "false",
+                    "descricao" => "Falha ao cadastrar a marca!",
+                    "objeto" => NULL
+                    );
+                $dados = array("response"=>$resp);
+                echo $this->myjson->my_json_encode($dados);
+            }
+        /*
+            }
+            else{
                 $resp = array(
                     "status" => "false",
                     "descricao" => "Acesso webservice negado!",
@@ -48,7 +49,8 @@ class Marca extends CI_Controller{
                 );
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
-            }
+        } */
+            
         }else{
             $resp = array("status" => "false",
                           "descricao" => "Requisição invalida!",

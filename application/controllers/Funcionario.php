@@ -25,6 +25,7 @@ class Funcionario extends CI_Controller{
                 $this->load->model("usuario_model");
                 $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($data->tipo_usuario_id);
 
+                $token = md5( $prox_usuario_id);
                 date_default_timezone_set('America/Sao_Paulo');
 
                 $usuario = array(
@@ -33,6 +34,7 @@ class Funcionario extends CI_Controller{
                     "status_id" => 2, // Status Ativo
                     "usuario_senha" => $data->usuario_senha,
                     "usuario_login" => $data->email_descricao,
+                    "usuario_token" => $token,
                     "usuario_data_cadastro" => date('Y-m-d H:i'),
                     "email_id" => $email_id);
                 $this->load->model("usuario_model");
@@ -107,8 +109,7 @@ class Funcionario extends CI_Controller{
         echo $this->myjson->my_json_encode($dados);
     }
 
-    public function EnviarEmailCadastroConsumidor($dadosConsumidor)
-    {
+    public function EnviarEmailCadastroConsumidor($dadosConsumidor){
         $assunto = 'MLprojetos - Cadastro de Consumidor';
         $conteudo = 'Olá ' .$dadosConsumidor->consumidor_nome. ' ' .$dadosConsumidor->consumidor_sobrenome. ', Seja Bem-vindo(a) !</br></br> Seu cadastro foi realizado com sucesso. </br></br> Dados de Acesso:</br> Login: ' .$dadosConsumidor->email_descricao. ' </br> Senha: ' .$dadosConsumidor->usuario_senha;
 
@@ -118,7 +119,7 @@ class Funcionario extends CI_Controller{
             return false;  
     }
 
-    public function EnviaEmail($destinatario, $assunto, $conteudo) {
+    public function EnviaEmail($destinatario, $assunto, $conteudo){
         $this->load->library('email');
         $this->email->from('contato@mlprojetos.com', 'MLprojetos');
         $this->email->to($destinatario);

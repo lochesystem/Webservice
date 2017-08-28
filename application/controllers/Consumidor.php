@@ -32,17 +32,17 @@ class Consumidor extends CI_Controller{
                 $this->load->model("usuario_model");
 
                 $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($data->tipo_usuario_id);
+                $token = md5($prox_usuario_id);
                 
-                $data = json_decode(file_get_contents('php://input'));
-
+                date_default_timezone_set('America/Sao_Paulo');
                 $usuario = array("usuario_id" => $prox_usuario_id,
                                  "tipo_usuario_id" => $data->tipo_usuario_id,
                                  "status_id" => 2, // Status Ativo
                                  "usuario_senha" => $data->usuario_senha,
                                  "usuario_login" => $data->email_descricao,
+                                 "usuario_token" => $token,
                                  "usuario_data_cadastro" => date('Y-m-d H:i'),
                                  "email_id" => $email_id);
-
                 $retorno = $this->usuario_model->adicionar_usuario($usuario);
                 $usuario_id = $this->usuario_model->retornar_max_id($data->tipo_usuario_id);
 
@@ -168,8 +168,7 @@ class Consumidor extends CI_Controller{
     /* ------------------------------------ HELPER ENVIO DE EMAIL ------------------------------------*/
 
     /* Responsável por enviar o email */
-    public function EnviarEmailConfirmacaoCadastro($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id)
-    {
+    public function EnviarEmailConfirmacaoCadastro($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id){
         // Carrega a library email
         $this->load->library('email');
          

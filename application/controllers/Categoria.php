@@ -12,11 +12,9 @@ class Categoria extends CI_Controller{
     public function adicionar(){
         $data = json_decode(file_get_contents('php://input'));
         var_dump($data);
-        if((isset($data->categoria_descricao) && !empty($data->categoria_descricao)) &&
-            (isset($data->token) && !empty($data->token))
-          )
+        if((isset($data->categoria_descricao) && !empty($data->categoria_descricao)))
         {
-            if($data->token == "Sw280717"){
+            //if($data->token == "Sw280717"){
 
                 $categoria = array("categoria_descricao" => $data->categoria_descricao);
                 $this->load->model("categoria_model");
@@ -40,7 +38,10 @@ class Categoria extends CI_Controller{
                     $dados = array("response"=>$resp);
                     echo $this->myjson->my_json_encode($dados);
                 }
-            }else{
+
+            /*   
+            }
+            else{
                 $resp = array(
                     "status" => "false",
                     "descricao" => "Acesso webservice negado!",
@@ -49,6 +50,8 @@ class Categoria extends CI_Controller{
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
             }
+            */
+
         }else{
             $resp = array("status" => "false",
                           "descricao" => "Requisição invalida!",
@@ -93,5 +96,4 @@ class Categoria extends CI_Controller{
         $dados = array("response"=>$resp);
         echo $this->myjson->my_json_encode($dados);
     }
-
 }
