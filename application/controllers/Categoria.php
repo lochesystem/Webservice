@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 
@@ -54,7 +54,7 @@ class Categoria extends CI_Controller{
 
         }else{
             $resp = array("status" => "false",
-                          "descricao" => "Requisição invalida!",
+                          "descricao" => "Requisição inválida!",
                           "objeto" => NULL
             );
             $dados = array("response"=>$resp);
@@ -95,5 +95,53 @@ class Categoria extends CI_Controller{
                       );
         $dados = array("response"=>$resp);
         echo $this->myjson->my_json_encode($dados);
+    }
+
+    public function alterarCategoria($categoria_id){
+        $data = json_decode(file_get_contents('php://input'));
+        if((isset($data->categoria_descricao)) && !empty($data->categoria_descricao)) &&
+            (isset($data->token) && !empty($data->token)))
+        {
+            if($data->token == "Sw280717"){
+
+                $categoria = array("categoria_descricao" => $data->categoria_descricao);
+                $this->load->model("categoria_model");
+                $resposta = $this->categoria_model->altera_categoria($categoria);
+
+                if($resposta == "SUCESSO")
+                {
+                   $resp = array(
+                        "status" => "true",
+                        "descricao" => "Categoria alterada com sucesso!",
+                        "objeto" => NULL
+                    );
+                    $dados = array("response"=>$resp);
+                    echo $this->myjson->my_json_encode($dados);
+                }else{
+                    $resp = array(
+                        "status" => "false",
+                        "descricao" => "Falha ao alterar a categoria!",
+                        "objeto" => NULL
+                        );
+                    $dados = array("response"=>$resp);
+                    echo $this->myjson->my_json_encode($dados);
+                }
+            }else{
+                $resp = array(
+                    "status" => "false",
+                    "descricao" => "Acesso webservice negado!",
+                    "objeto" => NULL
+                );
+                $dados = array("response"=>$resp);
+                echo $this->myjson->my_json_encode($dados);
+            }
+        }else{
+            $resp = array("status" => "false",
+                          "descricao" => "Requisição inválida!",
+                          "objeto" => NULL
+            );
+            $dados = array("response"=>$resp);
+            echo $this->myjson->my_json_encode($dados);
+        }
     }
 }
