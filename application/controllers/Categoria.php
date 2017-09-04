@@ -94,18 +94,19 @@ class Categoria extends CI_Controller{
         echo $this->myjson->my_json_encode($dados);
     }
 
-    public function alterarCategoria($categoria_id){
+    public function alterarCategoria(){
         $data = json_decode(file_get_contents('php://input'));
-        if((isset($data->categoria_descricao)) && !empty($data->categoria_descricao)) &&
-            (isset($data->token) && !empty($data->token))
-          )
+        if((isset($data->categoria_descricao)) && !empty($data->categoria_descricao) &&
+           (isset($data->categoria_id)) && !empty($data->categoria_id) &&
+            (isset($data->token) && !empty($data->token)))
         
         {
             if($data->token == "Sw280717"){
+                $categoria_id = $data->categoria_id;
+                $categoria_descricao = $data->categoria_descricao;
 
-                $categoria = array("categoria_descricao" => $data->categoria_descricao);
                 $this->load->model("categoria_model");
-                $resposta = $this->categoria_model->altera_categoria($categoria);
+                $resposta = $this->categoria_model->alterar_categoria($categoria_id,$categoria_descricao);
 
                 if($resposta == "SUCESSO")
                 {
@@ -134,14 +135,13 @@ class Categoria extends CI_Controller{
                 $dados = array("response"=>$resp);
                 echo $this->myjson->my_json_encode($dados);
             }
-        }else{
+            }else{
             $resp = array("status" => "false",
                           "descricao" => "Requisição inválida!",
                           "objeto" => NULL
             );
             $dados = array("response"=>$resp);
             echo $this->myjson->my_json_encode($dados);
-        }
+            }
     }
-
 }

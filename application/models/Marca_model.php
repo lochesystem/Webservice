@@ -35,4 +35,16 @@ class Marca_model extends CI_Model{
 		$query = $this->db->query('select * from tb_marcas');
 		return $query->result_array();
 	}
+
+	public function alterar_marca($marca_id,$marca_descricao)
+		{
+			$this->load->database();
+			$query = $this->db->query("update tb_marcas SET marca_descricao = '$marca_descricao' WHERE marca_id = $marca_id");
+
+			if($this->db->error()["code"] == 0){
+				return "SUCESSO";
+			}else{
+				return "ERRO";
+			}
+		}
 }

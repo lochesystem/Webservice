@@ -53,7 +53,7 @@ class Subcategoria extends CI_Controller{
             }
         }else{
             $resp = array("status" => "false",
-                          "descricao" => "Requisição invalida!",
+                          "descricao" => "Requisição inválida!",
                           "objeto" => NULL
             );
             $dados = array("response"=>$resp);

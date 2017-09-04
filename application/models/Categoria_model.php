@@ -36,11 +36,10 @@ class Categoria_model extends CI_Model{
 			return $query->result_array();
 		}
 
-		public function alterar_categoria($categoria)
+		public function alterar_categoria($categoria_id,$categoria_descricao)
 		{
 			$this->load->database();
-			$query = $this->db->query('update tb_categorias SET categoria_descricao = $categoria->categoria_descricao 
-									   WHERE categoria_id = $categoria->categoria_id');
+			$query = $this->db->query("update tb_categorias SET categoria_descricao = '$categoria_descricao' WHERE categoria_id = $categoria_id");
 
 			if($this->db->error()["code"] == 0){
 				return "SUCESSO";
