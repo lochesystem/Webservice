@@ -1,8 +1,7 @@
 <?php
 	class Funcionario_model extends CI_Model
 	{
-		public function adicionar_funcionario($funcionario)
-		{
+		public function adicionar_funcionario($funcionario){
 			$this->db->insert('tb_funcionarios',$funcionario);
 
 			if($this->db->error()["code"] == 0)
@@ -11,8 +10,7 @@
 				return "ERRO";
 		}
 
-		public function retornar_dados_funcionario($usuario_id, $tipo_usuario_id)
-		{
+		public function retornar_dados_funcionario($usuario_id, $tipo_usuario_id){
 			$this->load->database();
 			$query = $this->db->query('select u.usuario_id, 
 									   		  u.tipo_usuario_id, 
@@ -42,6 +40,5 @@
 				return $row["max(usuario_id)"];
 			}
 		}
-
 	}
 ?>

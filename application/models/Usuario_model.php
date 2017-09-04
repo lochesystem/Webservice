@@ -5,8 +5,7 @@
 			return $this->db->get("tb_usuarios")->result_array();
 		}
 
-		public function retornar_por_id_tipo($id, $tipo)
-		{
+		public function retornar_por_id_tipo($id, $tipo){
 			if(is_null($id) || is_null($tipo))
 			    return false;
 
@@ -38,8 +37,7 @@
 			return $resp;
 		}
 
-		public function retornar_por_id($id)
-		{
+		public function retornar_por_id($id){
 			if(is_null($id))
 			    return false;
 
@@ -65,8 +63,7 @@
 			}
 		}
 
-		public function retornar_por_login($login)
-		{
+		public function retornar_por_login($login){
 			if(is_null($login) )
 			    return NULL;
 
@@ -100,8 +97,7 @@
 			}
 		}
 		
-		public function adicionar_usuario($usuario)
-		{
+		public function adicionar_usuario($usuario){
 			$this->load->database();
 			$this->db->insert("tb_usuarios",$usuario);
 
@@ -127,12 +123,45 @@
 			return $resp;
 		}
 
-		public function retornar_proximo_usuario_id(){
-			return 1;
-		}
-
 		public function retornar_senha_provissoria(){
 			return 123456;
+		}
+
+		/**
+		* Função para gerar senhas aleatórias
+		*
+		* @author    Thiago Belem <contato@thiagobelem.net>
+		*
+		* @param integer $tamanho Tamanho da senha a ser gerada
+		* @param boolean $maiusculas Se terá letras maiúsculas
+		* @param boolean $numeros Se terá números
+		* @param boolean $simbolos Se terá símbolos
+		*
+		* @return string A senha gerada
+		*/
+
+		function geraSenha($tamanho = 6, $maiusculas = true, $numeros = true, $simbolos = false){
+			$lmin = 'abcdefghijklmnopqrstuvwxyz';
+			$lmai = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+			$num = '1234567890';
+			$simb = '!@#$%*-';
+			$retorno = '';
+			$caracteres = '';
+			$caracteres .= $lmin;
+
+			if ($maiusculas) $caracteres .= $lmai;
+			if ($numeros) $caracteres .= $num;
+			if ($simbolos) $caracteres .= $simb;
+
+			$len = strlen($caracteres);
+
+			for ($n = 1; $n <= $tamanho; $n++) {
+				$rand = mt_rand(1, $len);
+				$retorno .= $caracteres[$rand-1];
+			}
+
+			var_dump($retorno);
+			return $retorno;
 		}
 	}
 	
