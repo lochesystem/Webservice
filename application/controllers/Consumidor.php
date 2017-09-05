@@ -18,10 +18,14 @@ class Consumidor extends CI_Controller{
             (isset($data->tipo_telefone_id) && !empty($data->tipo_telefone_id)) &&
             (isset($data->telefone_ddd) && !empty($data->telefone_ddd)) &&
             (isset($data->telefone_numero) && !empty($data->telefone_numero)) &&
-            (isset($data->usuario_senha) && !empty($data->usuario_senha)) &&
-            (isset($data->token) && !empty($data->token))
-          )
+            (isset($data->usuario_senha) && !empty($data->usuario_senha)))
         {
+            //teste helper currency
+            //$this->load->helper("currency");
+            //$teste = numeroEmReais(200);
+            //var_dump($teste);
+
+            //Adicionando Email
             $Email = array(
                 "email_descricao" => $data->email_descricao
             );
@@ -32,12 +36,17 @@ class Consumidor extends CI_Controller{
                 $this->load->model("usuario_model");
 
                 $prox_usuario_id = $this->usuario_model->retornar_id_prox_usuario($data->tipo_usuario_id);
-                $token = md5($prox_usuario_id);
-                
+
+                //Helper token
+                $this->load->helper("token");
+                $token = gerarToken($prox_usuario_id);
+                var_dump($token);
+
+                //Adicionando usuario
                 date_default_timezone_set('America/Sao_Paulo');
                 $usuario = array("usuario_id" => $prox_usuario_id,
                                  "tipo_usuario_id" => $data->tipo_usuario_id,
-                                 "status_id" => 2, // Status Ativo
+                                 "status_id" => 1, // Status Ativo
                                  "usuario_senha" => $data->usuario_senha,
                                  "usuario_login" => $data->email_descricao,
                                  "usuario_token" => $token,
@@ -48,35 +57,37 @@ class Consumidor extends CI_Controller{
 
                 if(!empty($usuario_id))
                 {
+                    //Adicionando consumidor
                     $consumidor = array("usuario_id" => $usuario_id,
-                                         "tipo_usuario_id" => $data->tipo_usuario_id,
-                                         "consumidor_nome" => $data->consumidor_nome,
-                                         "consumidor_sobrenome" => $data->consumidor_sobrenome);
-
+                                        "tipo_usuario_id" => $data->tipo_usuario_id,
+                                        "consumidor_nome" => $data->consumidor_nome,
+                                        "consumidor_sobrenome" => $data->consumidor_sobrenome);
                     $this->load->model("consumidor_model");
                     $resp = $this->consumidor_model->adicionar_consumidor($consumidor);
 
+                    //Adicionando telefone
                     $telefone = array("tipo_telefone_id" => $data->tipo_telefone_id,
                                       "telefone_ddd" => $data->telefone_ddd,
                                       "telefone_numero" => $data->telefone_numero);
-
                     $this->load->model("telefone_model");
                     $telefone_id = $this->telefone_model->adicionar_telefone($telefone);
 
+                    //Adicionando consumidor_telefone
                     $consumidor_telefone = array("usuario_id" => $usuario_id,
                                                  "tipo_usuario_id" => $data->tipo_usuario_id,
                                                  "telefone_id" => $telefone_id);
-
                     $this->load->model("consumidor_telefone_model");
                     $resposta = $this->consumidor_telefone_model->adicionar_consumidor_telefone($consumidor_telefone);
                     
                     if($resposta == "SUCESSO")
                     {
-                        //$enviou = $this->EnviarEmailConfirmacaoCadastro($data->email_descricao,$data->consumidor_nome,$usuario_id,$data->tipo_usuario_id);
-                        
+                        //Helper email
+                        $this->load->helper("email");
+                        //$envio = enviarEmailConfirmacaoCadastro($data->email_descricao,$data->consumidor_nome,$usuario_id,$data->tipo_usuario_id);
+
                         $resp = array("status" => "true",
                                       "descricao" => "Consumidor cadastrado com sucesso!",
-                                      "objeto" => NULL
+                                      "objeto" => $token
                         );
                         $dados = array("response"=>$resp);
                         echo $this->myjson->my_json_encode($dados);
@@ -122,88 +133,89 @@ class Consumidor extends CI_Controller{
         }
     }
 
-    public function getConsumidor($usuario_id, $tipo_usuario_id){
-        $this->load->database();
-        $this->load->model("consumidor_model");
-        $consumidor = $this->consumidor_model->retornar_consumidor($usuario_id, $tipo_usuario_id);
-        
-        if(sizeof($consumidor) == 0){
-            $obj = array("status" => "false",
-                         "descricao" => "Nenhum consumidor encontrado.",
-                         "objeto" => NULL
-                        );
+    public function getConsumidor($usuario_id, $tipo_usuario_id, $usuario_token){
+        if((isset($usuario_id) && !empty($usuario_id)) &&
+            (isset($tipo_usuario_id) && !empty($tipo_usuario_id)) &&
+            (isset($usuario_token) && !empty($usuario_token)))
+        {
+            $this->load->helper("token");
+            if(validaToken($usuario_token)){
+                $this->load->database();
+                $this->load->model("consumidor_model");
+                $consumidor = $this->consumidor_model->retornar_consumidor($usuario_id, $tipo_usuario_id);
+            
+                if(sizeof($consumidor) == 0){
+                    $obj = array("status" => "false",
+                                 "descricao" => "Nenhum consumidor encontrado.",
+                                 "objeto" => NULL
+                                );
+                }else{
+                    $obj = array("status" => "true",
+                                 "descricao" => "Dados do consumidor.",
+                                 "objeto" => $consumidores
+                                );
+                }
+
+                $dados = array("response"=>$obj);
+                echo $this->myjson->my_json_encode($dados);
+            }else{
+                $obj = array("status" => "false",
+                                 "descricao" => "Acesso invalido.",
+                                 "objeto" => NULL
+                            );
+
+                $dados = array("response"=>$obj);
+                echo $this->myjson->my_json_encode($dados);
+            }
         }else{
-            $obj = array("status" => "true",
-                         "descricao" => "Dados do consumidor.",
-                         "objeto" => $consumidores
+            $obj = array("status" => "false",
+                             "descricao" => "Requisição invalida.",
+                             "objeto" => NULL
                         );
+
+            $dados = array("response"=>$obj);
+            echo $this->myjson->my_json_encode($dados);
         }
-        $dados = array("response"=>$obj);
-        echo $this->myjson->my_json_encode($dados);
     }
 
-    public function getConsumidores(){
-        $this->load->database();
-        $this->load->model("consumidor_model");
-        $consumidores = $this->consumidor_model->retornar_consumidores();
+    public function getConsumidores($usuario_token){
+        if((isset($usuario_token) && !empty($usuario_token)))
+        {
+            $this->load->helper("token");
+            if(validaToken($usuario_token)){
+                $this->load->database();
+                $this->load->model("consumidor_model");
+                $consumidores = $this->consumidor_model->retornar_consumidores();
 
-        if(sizeof($consumidores) == 0){
+                if(sizeof($consumidores) == 0){
+                    $obj = array("status" => "false",
+                                 "descricao" => "Nenhum consumidor encontrado!",
+                                 "objeto" => NULL);
+                }else{
+                    $obj = array("status" => "true",
+                                 "descricao" => "Lista de consumidores",
+                                 "objeto" => $consumidores);
+                }
+
+                $dados = array("response"=>$obj);
+                echo $this->myjson->my_json_encode($dados);
+            }else{
+                $obj = array("status" => "false",
+                                 "descricao" => "Acesso invalida.",
+                                 "objeto" => NULL
+                            );
+
+                $dados = array("response"=>$obj);
+                echo $this->myjson->my_json_encode($dados);
+            }
+        }else{
             $obj = array("status" => "false",
-                         "descricao" => "Nenhum consumidor encontrado!",
-                         "objeto" => NULL
+                             "descricao" => "Acesso invalida.",
+                             "objeto" => NULL
                         );
-        }else{
-            $obj = array("status" => "true",
-                         "descricao" => "Lista de consumidores",
-                         "objeto" => $consumidores
-                        );
+
+            $dados = array("response"=>$obj);
+            echo $this->myjson->my_json_encode($dados);
         }
-        $dados = array("response"=>$obj);
-        echo $this->myjson->my_json_encode($dados);
-    } 
-
-    //public function updateConsumidor(){
-    //}
-
-    /* ------------------------------------ HELPER ENVIO DE EMAIL ------------------------------------*/
-
-    /* Responsável por enviar o email */
-    public function EnviarEmailConfirmacaoCadastro($email_destinatario, $nome_destinatario, $usuario_id, $tipo_usuario_id){
-        // Carrega a library email
-        $this->load->library('email');
-         
-        //Inicia o processo de configuração para o envio do email
-        $config['protocol'] = 'mail'; // define o protocolo utilizado
-        $config['wordwrap'] = TRUE; // define se haverá quebra de palavra no texto
-        $config['validate'] = TRUE; // define se haverá validação dos endereços de email
-        $config['mailtype'] = 'html'; // tipo template
-
-        // Inicializa a library Email, passando os parâmetros de configuração
-        $this->email->initialize($config);
-        
-        // Define remetente e destinatário
-        $this->email->from('contato@mlprojetos.com', 'Smarket App'); // Remetente
-        $this->email->to($email_destinatario,[$nome_destinatario]); // Destinatário
- 
-        // Define o assunto do email
-        $this->email->subject('Seja bem-vindo ao Smarket App.');
- 
-        // Preencher conteudo do template
-        $header = "Olá " . $nome_destinatario;
-        $p1 = "Agradeçemos pelo seu cadastro!";
-        $p2 = "Através do Smarket App você terá acesso a produtos de qualidade e com o menor preço, aproveite !!!";
-        $p3 = "Ative seu acesso clicando no link abaixo:";
-        $p4 = "http://www.mlprojetos.com/webservice/index.php/acesso/aprovarcadastro/$usuario_id/$tipo_usuario_id/Sw280717";
-        $footer = "Equipe Smarket App";
-        $conteudo = array('header' => $header, 'p1' => $p1, 'p2' => $p2, 'p3' => $p3, 'p4' => $p4, 'footer' => $footer);
-
-        $dados = array("conteudo" => $conteudo);
-        $this->email->message($this->load->view("email-template", $dados, true));
-
-        if($this->email->send()){
-            return "Email enviado com sucesso!";
-        }else{
-            return "Erro no disparo de email!";
-        }  
     }
 }

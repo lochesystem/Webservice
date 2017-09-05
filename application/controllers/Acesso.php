@@ -84,16 +84,13 @@ class Acesso extends CI_Controller{
         }        
     }
 
-    public function aprovarCadastro($usuario_id, $tipo_usuario_id, $token){
-        if(
-            isset($usuario_id) && !empty($usuario_id) &&
-            isset($tipo_usuario_id) && !empty($tipo_usuario_id) &&
-            isset($token) && !empty($token)
-        )
+    public function aprovarCadastro($usuario_token){
+        if(isset($usuario_token) && !empty($usuario_token))
         {
-            if($token == "Sw280717"){
+            $this->load->helper("token");
+            if(validaToken($usuario_token)){
                 $this->load->model("usuario_model");
-                $resp = $this->usuario_model->alterarStatus($usuario_id, $tipo_usuario_id, 2);
+                $resp = $this->usuario_model->alterarStatus($usuario_token, 2);
                 if($resp == 1){
                     echo "Cadastro aprovado com sucesso !!!";
                 }else{
@@ -126,10 +123,8 @@ class Acesso extends CI_Controller{
     public function RedefinirSenha(){
         $data = json_decode(file_get_contents('php://input'));
 
-        if(isset($data->usuario_id) && !empty($data->usuario_id) &&
-           isset($data->tipo_usuario_id) && !empty($data->tipo_usuario_id) &&
-           isset($data->nova_senha) && !empty($data->nova_senha) &&
-           isset($data->token) && !empty($data->token))
+        if(isset($data->token) && !empty($data->token) &&
+           isset($data->nova_senha) && !empty($data->nova_senha))
         {
             if($data->token == "Sw280717"){
                 

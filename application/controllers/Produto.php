@@ -5,6 +5,7 @@ header("Access-Control-Allow-Headers: Content-Type");
 class Produto extends CI_Controller{
 	public function adicionarProduto(){
         $data = json_decode(file_get_contents('php://input'));
+        var_dump($data);
 
     	if((isset($data->estabelecimento_id) && !empty($data->estabelecimento_id)) &&
             (isset($data->produto_descricao) && !empty($data->produto_descricao)) &&
@@ -121,35 +122,35 @@ class Produto extends CI_Controller{
             (isset($data->estabelecimento_id) && !empty($data->estabelecimento_id)) &&
             (isset($data->lote_data_fabricacao) && !empty($data->lote_data_fabricacao)) &&
             (isset($data->lote_data_vencimento) && !empty($data->lote_data_vencimento)) &&
-            (isset($data->lote_data_cadastro) && !empty($data->lote_data_cadastro)) &&
             (isset($data->lote_preco) && !empty($data->lote_preco)) &&
             (isset($data->lote_obs) && !empty($data->lote_obs)) &&
             (isset($data->lote_quantidade) && !empty($data->lote_quantidade)) &&
-            (isset($data->lote_unidade_medida_id) && !empty($data->lote_unidade_medida_id))
+            (isset($data->unidade_medida_id) && !empty($data->unidade_medida_id))
           )
         {
-            $this->load->model("lote_model");
-            $lote_id = $this->lote_model->retornar_max_id_lote();
+            $this->load->model("produto_model");
+            $lote_id = $this->produto_model->retornar_max_id_lote();
             if($lote_id == null){
                 $lote_id = 1;
             }else{
                 $lote_id = $lote_id + 1;
             }
 
+            date_default_timezone_set('America/Sao_Paulo');
             $lote = array(
                 'lote_id' => $lote_id,
                 'produto_id' => $data->produto_id,
                 'estabelecimento_id' => $data->estabelecimento_id,
                 'lote_data_fabricacao' => $data->lote_data_fabricacao,
                 'lote_data_vencimento' => $data->lote_data_vencimento,
-                'lote_data_cadastro' => $data->lote_data_cadastro,
+                'lote_data_cadastro' => date('Y-m-d H:i'),
                 'lote_preco' => $data->lote_preco,
                 'lote_obs' => $data->lote_obs,
                 'lote_quantidade' => $data->lote_quantidade,
-                'lote_unidade_medida_id' => $data->lote_unidade_medida_id,
+                'unidade_medida_id' => $data->unidade_medida_id,
             );
-            $this->load->model("lote_model");
-            $resposta = $this->lote_model->salvarLote($lote);
+            $this->load->model("produto_model");
+            $resposta = $this->produto_model->salvarLote($lote);
 
             if($resposta == "SUCESSO"){
                 $resp = array("status" => "true",

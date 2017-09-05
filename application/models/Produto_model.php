@@ -1,12 +1,12 @@
 <?php
-class Consumidor_model extends CI_Model
+class Produto_model extends CI_Model
 {
 	public function retornar_max_id_produto(){
 		$this->load->database();
 		$query = $this->db->query('select max(produto_id) from tb_produtos');
 		foreach ($query->result_array() as $row)
 		{
-			return $row["max(usuario_id)"];
+			return $row["max(produto_id)"];
 		}
 	}
 
