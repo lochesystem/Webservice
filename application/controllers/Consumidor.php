@@ -83,7 +83,7 @@ class Consumidor extends CI_Controller{
                     {
                         //Helper email
                         $this->load->helper("email");
-                        //$envio = enviarEmailConfirmacaoCadastro($data->email_descricao,$data->consumidor_nome,$usuario_id,$data->tipo_usuario_id);
+                        $envio = enviarEmailConfirmacaoCadastro($data->email_descricao,$data->consumidor_nome,$usuario_id,$data->tipo_usuario_id);
 
                         $resp = array("status" => "true",
                                       "descricao" => "Consumidor cadastrado com sucesso!",
