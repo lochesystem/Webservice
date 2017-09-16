@@ -35,7 +35,7 @@ class Acesso extends CI_Controller{
                 {
                     $resp = array(
                         "status" => "false",
-                        "descricao" => "Senha inválida!",
+                        "descricao" => "Senha inválida!!!!!!!",
                         "objeto" => NULL
                     );
                     $dados = array("response"=>$resp);
