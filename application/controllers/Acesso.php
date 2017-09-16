@@ -35,7 +35,7 @@ class Acesso extends CI_Controller{
                 {
                     $resp = array(
                         "status" => "false",
-                        "descricao" => "Senha inválida!!!!!!!",
+                        "descricao" => "Senha inválida!",
                         "objeto" => NULL
                     );
                     $dados = array("response"=>$resp);
@@ -46,28 +46,39 @@ class Acesso extends CI_Controller{
                     switch ($usuario["status_id"]) {
                         case 1:
                             $resp = array("status" => "false",
-                                          "descricao" => "Aguardando aprovação de cadastro!",
+                                          "descricao" => "Aguardando confirmação de cadastro!",
                                           "objeto" => $usuario);
                             $dados = array("response"=>$resp);
                             echo $this->myjson->my_json_encode($dados);
+                            break;
                         case 2:
                             $resp = array("status" => "true",
                                           "descricao" => "Usuário autenticado com sucesso!",
                                           "objeto" => $usuario);
                             $dados = array("response"=>$resp);
                             echo $this->myjson->my_json_encode($dados);
+                            break;
                         case 3:
                             $resp = array("status" => "false",
                                           "descricao" => "Usuário inativo!",
                                           "objeto" => $usuario);
                             $dados = array("response"=>$resp);
                             echo $this->myjson->my_json_encode($dados);
+                            break;
                         case 4:
                             $resp = array("status" => "false",
                                           "descricao" => "Usuário bloqueado!",
                                           "objeto" => $usuario);
                             $dados = array("response"=>$resp);
                             echo $this->myjson->my_json_encode($dados);
+                            break;
+                        case 5:
+                            $resp = array("status" => "false",
+                                          "descricao" => "Aguardando aprovação de cadastro!",
+                                          "objeto" => $usuario);
+                            $dados = array("response"=>$resp);
+                            echo $this->myjson->my_json_encode($dados);
+                            break;
                     }
                 }
             }
